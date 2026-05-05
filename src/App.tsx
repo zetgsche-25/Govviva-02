@@ -8,6 +8,7 @@ import { Home } from './pages/Home';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { MyRegistrations } from './pages/MyRegistrations';
+import { AdminDashboard } from './pages/AdminDashboard';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLocation } from 'react-router-dom';
@@ -44,15 +45,12 @@ const AppContent: React.FC = () => {
                 } 
               />
               
-              {/* Rota de Admin (Exemplo) */}
+              {/* Rota Administrativa Oficial */}
               <Route 
                 path="/admin" 
                 element={
                   <ProtectedRoute allowedRoles={['ADMIN']}>
-                    <div className="max-w-7xl mx-auto px-4 py-12">
-                      <h2 className="text-2xl font-bold mb-4">Painel Administrativo</h2>
-                      <p className="text-gray-500">Gestão avançada de eventos e usuários.</p>
-                    </div>
+                    <AdminDashboard />
                   </ProtectedRoute>
                 } 
               />

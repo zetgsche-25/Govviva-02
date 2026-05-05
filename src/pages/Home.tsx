@@ -8,7 +8,7 @@ import { motion } from 'motion/react';
 import { CertificateButton } from '../components/CertificateButton';
 import { EmptyState } from '../components/EmptyState';
 import { Event, Registration } from '../types';
-import { Info, CheckCircle, Loader2, AlertCircle, X, MapPin, Calendar, Users, ExternalLink, ArrowRight, SearchX } from 'lucide-react';
+import { Info, CheckCircle, Loader2, AlertCircle, X, MapPin, Calendar, Users, ExternalLink, ArrowRight, SearchX, Shield } from 'lucide-react';
 
 export const Home: React.FC = () => {
   const { user } = useAuth();
@@ -79,31 +79,26 @@ export const Home: React.FC = () => {
           <div className="max-w-3xl animate-fade-in shadow-2xl shadow-black/20 p-8 rounded-3xl bg-black/10 backdrop-blur-sm border border-white/10">
             <div className="flex items-center gap-3 mb-8">
               <div className="w-16 h-1.5 bg-white/40 rounded-full"></div>
-              <span className="text-xs font-black uppercase tracking-[0.4em] text-white/90">Gestão de Transparência Municipal</span>
+              <span className="text-xs font-black uppercase tracking-[0.4em] text-white/90">Secretaria Municipal de Cultura - Maricá/RJ</span>
             </div>
             <h1 className="text-5xl sm:text-8xl font-black tracking-tighter mb-8 uppercase leading-[0.85]">
-              Cidadania <br/>
-              <span className="text-blue-200 underline decoration-blue-400/30 underline-offset-[12px] decoration-4">em Movimento</span>
+              Agenda <br/>
+              <span className="text-blue-200 underline decoration-blue-400/30 underline-offset-[12px] decoration-4">Institucional</span>
             </h1>
             <p className="text-xl sm:text-2xl text-white/90 font-medium mb-12 leading-relaxed max-w-2xl">
-              Plataforma unificada para participação em conferências, workshops e programas sociais da cidade. 
-              Sua presença fortalece o serviço público.
+              Consulte a programação oficial de eventos, realize sua inscrição em atividades públicas e emita seus certificados de participação de forma digital.
             </p>
             <div className="flex flex-wrap gap-6">
               <button 
                 onClick={() => document.getElementById('calendario-oficial')?.scrollIntoView({ behavior: 'smooth' })}
                 className="bg-white text-gov-blue px-12 py-5 rounded-2xl font-black uppercase tracking-[0.15em] text-xs hover:bg-gov-blue-light transition-all shadow-2xl hover:scale-105 active:scale-95"
               >
-                Acessar Calendário
+                Consultar Eventos
               </button>
-              {!user && (
-                <button 
-                  onClick={() => navigate('/register')}
-                  className="bg-gov-blue-dark/50 backdrop-blur-xl border border-white/30 text-white px-12 py-5 rounded-2xl font-black uppercase tracking-[0.15em] text-xs hover:bg-white/10 transition-all active:scale-95"
-                >
-                  Criar Conta Única
-                </button>
-              )}
+              <div className="flex items-center gap-3 px-6 py-4 bg-white/10 backdrop-blur-md rounded-2xl border border-white/10">
+                <Shield className="w-5 h-5 text-blue-300" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-white">Ambiente Seguro LGPD</span>
+              </div>
             </div>
           </div>
         </div>
@@ -116,7 +111,7 @@ export const Home: React.FC = () => {
               <Calendar className="w-8 h-8" />
             </div>
             <div>
-              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Total de Prontuários</p>
+              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Próximos Eventos</p>
               <p className="text-2xl font-black text-gray-900 uppercase tracking-tighter">{events.length} Atividades</p>
             </div>
           </div>
@@ -125,17 +120,17 @@ export const Home: React.FC = () => {
               <CheckCircle className="w-8 h-8" />
             </div>
             <div>
-              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Inscrições Abertas</p>
-              <p className="text-2xl font-black text-gray-900 uppercase tracking-tighter">{events.filter(e => e.available_slots > 0).length} Disponíveis</p>
+              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Inscrições Confirmadas</p>
+              <p className="text-2xl font-black text-gray-900 uppercase tracking-tighter">{myRegistrations.length} Participações</p>
             </div>
           </div>
           <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-2xl flex items-center gap-6 group hover:border-gov-blue/20 transition-all">
             <div className="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-600 group-hover:scale-110 transition-transform">
-              <Users className="w-8 h-8" />
+              <Shield className="w-8 h-8" />
             </div>
             <div>
-              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Participação Popular</p>
-              <p className="text-2xl font-black text-gray-900 uppercase tracking-tighter">100% Gratuito</p>
+              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Proteção LGPD</p>
+              <p className="text-2xl font-black text-gray-900 uppercase tracking-tighter">Dados Seguros</p>
             </div>
           </div>
         </div>
@@ -160,9 +155,9 @@ export const Home: React.FC = () => {
         {/* Featured Section */}
         {!loading && featuredEvent && (
           <div className="mb-24">
-            <div className="flex items-center gap-4 mb-10">
+            <div className="flex items-center gap-4 mb-4">
               <div className="h-10 w-2 bg-gov-blue rounded-full"></div>
-              <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tighter">Evento em Destaque</h2>
+              <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tighter">Destaque Institucional</h2>
             </div>
             <div 
               onClick={() => setSelectedEvent(featuredEvent)}
@@ -173,9 +168,12 @@ export const Home: React.FC = () => {
                   <Calendar className="w-48 h-48 text-gov-blue" />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-tr from-gov-blue/20 to-transparent"></div>
-                <div className="absolute top-8 left-8">
-                  <span className="px-4 py-2 bg-gov-blue text-white text-xs font-black uppercase tracking-widest rounded-xl shadow-lg border border-white/20">
-                    {featuredEvent.category}
+                <div className="absolute top-8 left-8 flex flex-col gap-2">
+                  <span className="px-4 py-2 bg-gov-blue text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-lg border border-white/20 self-start">
+                    Protocolo: #2026-{featuredEvent.id.toString().padStart(4, '0')}
+                  </span>
+                  <span className="px-4 py-2 bg-white/80 backdrop-blur-md text-gov-blue text-[10px] font-black uppercase tracking-widest rounded-xl shadow-lg border border-blue-50 self-start">
+                    Secretaria de Cultura
                   </span>
                 </div>
               </div>
@@ -211,7 +209,7 @@ export const Home: React.FC = () => {
                     {isUserRegistered(featuredEvent.id) ? (
                       <>
                         <CheckCircle className="w-5 h-5 text-emerald-500" />
-                        <span className="font-black text-xs text-emerald-600 uppercase tracking-widest">Vaga Garantida</span>
+                        <span className="font-black text-xs text-emerald-600 uppercase tracking-widest">Inscrição Confirmada</span>
                       </>
                     ) : (
                       <>
@@ -221,7 +219,7 @@ export const Home: React.FC = () => {
                     )}
                   </div>
                   <button className="flex items-center gap-2 text-gov-blue font-black text-xs uppercase tracking-widest group-hover:translate-x-2 transition-transform">
-                    {isUserRegistered(featuredEvent.id) ? 'Ver Prontuário' : 'Saiba Mais e Inscreva-se'} <ArrowRight className="w-4 h-4" />
+                    {isUserRegistered(featuredEvent.id) ? 'Consultar Protocolo' : 'Realizar Inscrição Oficial'} <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
               </div>
@@ -234,10 +232,10 @@ export const Home: React.FC = () => {
           <div className="max-w-2xl">
             <div className="flex items-center gap-4 mb-4">
               <div className="h-2 w-12 bg-gov-blue rounded-full"></div>
-              <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tighter">Prontuários Disponíveis</h2>
+              <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tighter">Cronograma de Eventos</h2>
             </div>
             <p className="text-gray-500 font-medium text-xl leading-relaxed">
-              Explore o catálogo completo de atividades oficiais disponibilizadas para o cidadão.
+              Consulte o catálogo completo de atividades oficiais disponibilizadas pela prefeitura.
             </p>
           </div>
           <div className="flex items-center gap-3 bg-white p-2 rounded-2xl border border-gray-100 shadow-xl">

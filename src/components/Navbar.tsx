@@ -77,6 +77,19 @@ export const Navbar: React.FC = () => {
                 Calendário
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gov-blue group-hover:w-full transition-all"></span>
               </Link>
+              {user && user.role === 'ADMIN' && (
+                <Link 
+                  to="/admin" 
+                  className={`text-[11px] font-black uppercase tracking-[0.2em] py-2 transition-all relative group ${
+                    isActive('/admin') ? 'text-gov-blue' : 'text-gray-400 hover:text-gov-blue'
+                  }`}
+                >
+                  Gestão Administrativa
+                  <span className={`absolute bottom-0 left-0 h-0.5 bg-gov-blue transition-all ${
+                    isActive('/admin') ? 'w-full' : 'w-0 group-hover:w-full'
+                  }`}></span>
+                </Link>
+              )}
               {user && (
                 <Link 
                   to="/my-registrations" 
@@ -98,7 +111,9 @@ export const Navbar: React.FC = () => {
                 <div className="hidden lg:flex items-center gap-5 pl-8 border-l border-gray-100">
                   <div className="flex flex-col items-end">
                     <span className="text-xs font-black text-gray-900 uppercase tracking-tight">{user.name.split(' ')[0]}</span>
-                    <span className="text-[9px] text-gov-blue font-black uppercase tracking-widest bg-blue-50 px-2 py-0.5 rounded mt-1">Cidadão</span>
+                    <span className="text-[9px] text-gov-blue font-black uppercase tracking-widest bg-blue-50 px-2 py-0.5 rounded mt-1">
+                      {user.role === 'ADMIN' ? 'Gestor Público' : 'Cidadão'}
+                    </span>
                   </div>
                   <button
                     onClick={() => {

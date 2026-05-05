@@ -21,7 +21,7 @@ export const RegistrationCard: React.FC<RegistrationCardProps> = ({ registration
         </span>
         <div className="flex items-center gap-1.5 text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border border-emerald-100 shadow-sm">
           <CheckCircle className="w-3.5 h-3.5" />
-          {registration.status === 'CONFIRMED' ? 'Confirmada' : 'Presente'}
+          {registration.status === 'CONFIRMED' ? 'Validada' : 'Participação Confirmada'}
         </div>
       </div>
 
