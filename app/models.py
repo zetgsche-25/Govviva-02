@@ -40,6 +40,7 @@ class Event(db.Model):
     status = db.Column(db.String(20), default='ACTIVE')
     creator_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     org_id = db.Column(db.String(50))
+    org_name = db.Column(db.String(100))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def to_dict(self):
@@ -53,7 +54,8 @@ class Event(db.Model):
             "available_slots": self.available_slots,
             "category": self.category,
             "status": self.status,
-            "org_id": self.org_id
+            "org_id": self.org_id,
+            "org_name": self.org_name
         }
 
 class Registration(db.Model):

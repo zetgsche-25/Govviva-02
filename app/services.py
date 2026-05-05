@@ -35,7 +35,8 @@ class EventService:
             available_slots=int(data['total_slots']),
             category=data['category'],
             creator_id=creator_id,
-            org_id=data.get('org_id', 'GOV_ROOT')
+            org_id=data.get('org_id', 'GOV_ROOT'),
+            org_name=data.get('org_name', 'Governo Municipal')
         )
         db.session.add(event)
         db.session.commit()
