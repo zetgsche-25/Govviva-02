@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-gov-blue: #003399;
+  --color-gov-blue-dark: #002266;
+  --color-gov-blue-light: #f0f7ff;
+  --color-gov-gray: #f8fafc;
+  --color-gov-text: #0f172a;
+  --color-gov-accent: #2563eb;
+  
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  --shadow-gov: 0 20px 50px -12px rgba(0, 51, 153, 0.08);
+  --radius-gov: 1.5rem;
+}
+
+@layer base {
+  body {
+    @apply bg-gray-50 text-slate-900 antialiased selection:bg-gov-blue/10 selection:text-gov-blue;
+    font-feature-settings: "cv02", "cv05", "cv11";
+  }
+}
+
+.gov-hero-gradient {
+  background: linear-gradient(135deg, #003399 0%, #002266 100%);
+}
+
+.gov-card-shadow {
+  box-shadow: var(--shadow-gov);
+}
+
+.gov-section-spacing {
+  @apply py-24 sm:py-32;
+}
+
+.gov-container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Skeleton Pulse */
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-pulse-slow {
+  animation: skeleton-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 rounded-full hover:bg-gray-400 transition-colors;
+}
