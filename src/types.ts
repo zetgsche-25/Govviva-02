@@ -17,6 +17,7 @@ export interface Event {
   category: string;
   status: string;
   org_id?: string;
+  org_name?: string;
 }
 
 export interface Registration {

@@ -173,7 +173,7 @@ export const Home: React.FC = () => {
                     Protocolo: #2026-{featuredEvent.id.toString().padStart(4, '0')}
                   </span>
                   <span className="px-4 py-2 bg-white/80 backdrop-blur-md text-gov-blue text-[10px] font-black uppercase tracking-widest rounded-xl shadow-lg border border-blue-50 self-start">
-                    Secretaria de Cultura
+                    {featuredEvent.org_name || 'Secretaria Responsável'}
                   </span>
                 </div>
               </div>
@@ -321,6 +321,15 @@ export const Home: React.FC = () => {
                   </div>
                   <div className="flex items-start gap-4">
                     <div className="p-2 bg-white/10 rounded-xl">
+                      <Shield className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-black text-blue-200 uppercase tracking-widest mb-1 opacity-70">Responsável</p>
+                      <p className="font-bold text-lg leading-tight tracking-tight">{selectedEvent.org_name || 'Governo Municipal'}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <div className="p-2 bg-white/10 rounded-xl">
                       <Users className="w-5 h-5 text-white" />
                     </div>
                     <div>
@@ -426,7 +435,7 @@ export const Home: React.FC = () => {
                     Autenticado via Portal GOVVIVA
                   </p>
                   <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.25em]">
-                    Atividade ID: {selectedEvent.id}
+                    Protocolo: #2026-{selectedEvent.id.toString().padStart(4, '0')}
                   </p>
                 </div>
               </div>

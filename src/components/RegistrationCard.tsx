@@ -15,10 +15,15 @@ export const RegistrationCard: React.FC<RegistrationCardProps> = ({ registration
   return (
     <div className="bg-white rounded-[32px] border border-gray-100 p-8 hover:shadow-2xl hover:border-gov-blue/20 transition-all shadow-sm gov-card-shadow flex flex-col h-full animate-fade-in group">
       <div className="flex justify-between items-start mb-8">
-        <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-gov-blue-light text-gov-blue text-[10px] font-black rounded-xl uppercase tracking-widest border border-blue-50 shadow-sm">
-          <Tag className="w-3 h-3" />
-          {event.category}
-        </span>
+        <div className="flex flex-col gap-2">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-gov-blue-light text-gov-blue text-[10px] font-black rounded-xl uppercase tracking-widest border border-blue-50 shadow-sm self-start">
+            <Tag className="w-3 h-3" />
+            {event.category}
+          </span>
+          <span className="text-[9px] font-black text-gray-300 uppercase tracking-widest pl-1">
+            Validado: #REG-{registration.registration_id.toString().padStart(6, '0')}
+          </span>
+        </div>
         <div className="flex items-center gap-1.5 text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border border-emerald-100 shadow-sm">
           <CheckCircle className="w-3.5 h-3.5" />
           {registration.status === 'CONFIRMED' ? 'Validada' : 'Participação Confirmada'}
@@ -44,7 +49,7 @@ export const RegistrationCard: React.FC<RegistrationCardProps> = ({ registration
             <MapPin className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest mb-0.5">Localização Pública</p>
+            <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest mb-0.5">{event.org_name || 'Órgão Responsável'}</p>
             <span className="truncate block max-w-[200px]">{event.location}</span>
           </div>
         </div>

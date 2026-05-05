@@ -21,10 +21,15 @@ export const EventCard: React.FC<EventCardProps> = ({ event, onClick, isRegister
       
       <div className="p-8 flex flex-col h-full">
         <div className="flex justify-between items-start mb-6">
-          <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-gov-blue-light text-gov-blue text-[9px] font-black rounded-lg uppercase tracking-[0.2em] border border-blue-100 shadow-sm shadow-blue-50">
-            <Tag className="w-3 h-3" />
-            {event.category}
-          </span>
+          <div className="flex flex-col gap-2">
+            <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-gov-blue-light text-gov-blue text-[9px] font-black rounded-lg uppercase tracking-[0.2em] border border-blue-100 shadow-sm shadow-blue-50 self-start">
+              <Tag className="w-3 h-3" />
+              {event.category}
+            </span>
+            <span className="text-[8px] font-black text-gray-300 uppercase tracking-widest pl-1">
+              Proc. #2026-{event.id.toString().padStart(4, '0')}
+            </span>
+          </div>
           <div className="flex items-center gap-2">
             {isRegistered ? (
               <span className="px-3 py-1 bg-emerald-50 text-emerald-600 text-[9px] font-black rounded-md border border-emerald-100 uppercase tracking-widest flex items-center gap-1 shadow-sm">
@@ -64,7 +69,7 @@ export const EventCard: React.FC<EventCardProps> = ({ event, onClick, isRegister
               <MapPin className="w-5 h-5 text-gray-400 group-hover:text-gov-blue" />
             </div>
             <div className="flex flex-col justify-center">
-              <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest mb-0.5">Localização Pública</span>
+              <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest mb-0.5">{event.org_name || 'Órgão Responsável'}</span>
               <span className="font-bold text-sm tracking-tight text-gray-700 line-clamp-1">{event.location}</span>
             </div>
           </div>

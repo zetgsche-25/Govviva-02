@@ -47,14 +47,16 @@ export const CertificateButton: React.FC<CertificateButtonProps> = ({ event, use
     doc.setFont("helvetica", "normal");
     doc.setTextColor(30, 41, 59);
     doc.text(`Participou do evento: "${event.title}"`, 148, 135, { align: "center" });
-    doc.text(`Realizado em: ${event.location}`, 148, 145, { align: "center" });
+    doc.text(`Realizado por: ${event.org_name || 'Governo Municipal'}`, 148, 145, { align: "center" });
+    doc.text(`Local: ${event.location}`, 148, 155, { align: "center" });
 
     // Rodapé
     doc.setFontSize(10);
     const date = new Date().toLocaleDateString('pt-BR');
-    doc.text(`Gerado via Portal GOVVIVA em ${date}`, 148, 180, { align: "center" });
+    doc.text(`Protocolo de Autenticação: #2026-${event.id.toString().padStart(4, '0')}`, 148, 175, { align: "center" });
+    doc.text(`Gerado via Portal GOVVIVA em ${date}`, 148, 185, { align: "center" });
     
-    doc.save(`certificado_${event.id}.pdf`);
+    doc.save(`certificado_viva_${event.id}.pdf`);
   };
 
   return (

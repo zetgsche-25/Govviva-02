@@ -21,9 +21,41 @@ export const AdminDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
+  const [showModal, setShowModal] = useState(false);
+  const [newEvent, setNewEvent] = useState({
+    title: '',
+    description: '',
+    date_start: '',
+    location: '',
+    total_slots: 0,
+    category: '',
+    org_name: ''
+  });
+
   useEffect(() => {
     fetchEvents();
   }, []);
+
+  const handleCreateEvent = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await api.post('/events', newEvent);
+      setShowModal(false);
+      fetchEvents();
+      setNewEvent({
+        title: '',
+        description: '',
+        date_start: '',
+        location: '',
+        total_slots: 0,
+        category: '',
+        org_name: ''
+      });
+    } catch (error) {
+      console.error('Erro ao criar evento', error);
+      alert('Erro ao criar evento institucional.');
+    }
+  };
 
   const fetchEvents = async () => {
     try {
@@ -58,7 +90,10 @@ export const AdminDashboard: React.FC = () => {
               <h1 className="text-4xl font-black text-gray-900 uppercase tracking-tighter leading-none">Painel de <span className="text-gov-blue">Controle Administrativo</span></h1>
               <p className="text-gray-400 font-medium mt-4 max-w-xl">Gerenciamento oficial de atividades, monitoramento de vagas e acompanhamento de adesão pública.</p>
             </div>
-            <button className="flex items-center gap-3 bg-gov-blue text-white px-10 py-5 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-gov-blue-dark transition-all shadow-2xl shadow-blue-100 active:scale-95">
+            <button 
+              onClick={() => setShowModal(true)}
+              className="flex items-center gap-3 bg-gov-blue text-white px-10 py-5 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-gov-blue-dark transition-all shadow-2xl shadow-blue-100 active:scale-95"
+            >
               <Plus className="w-5 h-5" />
               Criar Novo Evento
             </button>
@@ -150,9 +185,10 @@ export const AdminDashboard: React.FC = () => {
                         </div>
                         <div>
                           <p className="font-black text-gray-900 uppercase tracking-tight mb-1">{event.title}</p>
-                          <div className="flex items-center gap-2 text-[10px] font-black text-gray-300 uppercase tracking-widest">
-                            <Calendar className="w-3 h-3" />
-                            {new Date(event.date_start).toLocaleDateString('pt-BR')}
+                          <div className="flex items-center gap-3 text-[10px] font-black text-gray-300 uppercase tracking-widest">
+                            <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {new Date(event.date_start).toLocaleDateString('pt-BR')}</span>
+                            <span className="w-1 h-1 bg-gray-200 rounded-full"></span>
+                            <span className="text-gov-blue">{event.org_name || 'Setor Responsável'}</span>
                           </div>
                         </div>
                       </div>
@@ -204,6 +240,124 @@ export const AdminDashboard: React.FC = () => {
           )}
         </div>
       </div>
+      {/* Modal de Criação */}
+      {showModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-gov-blue-dark/60 backdrop-blur-md" onClick={() => setShowModal(false)} />
+          <div className="bg-white w-full max-w-2xl rounded-[40px] shadow-2xl relative overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="p-10 border-b border-gray-100 flex justify-between items-center">
+              <div>
+                <p className="text-[10px] font-black text-gov-blue uppercase tracking-widest mb-1">Novo Protocolo</p>
+                <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tighter">Registrar Atividade</h2>
+              </div>
+              <button onClick={() => setShowModal(false)} className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
+                <Plus className="w-8 h-8 rotate-45" />
+              </button>
+            </div>
+            
+            <form onSubmit={handleCreateEvent} className="p-10 space-y-6">
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-1">Título Institucional</label>
+                  <input 
+                    type="text" 
+                    required
+                    className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-gov-blue/5 transition-all outline-none"
+                    placeholder="Ex: II Fórum de Mobilidade"
+                    value={newEvent.title}
+                    onChange={(e) => setNewEvent({...newEvent, title: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-1">Categoria Oficial</label>
+                  <input 
+                    type="text" 
+                    required
+                    className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-gov-blue/5 transition-all outline-none"
+                    placeholder="Ex: Gestão Pública"
+                    value={newEvent.category}
+                    onChange={(e) => setNewEvent({...newEvent, category: e.target.value})}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-1">Órgão Responsável</label>
+                <input 
+                  type="text" 
+                  required
+                  className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-gov-blue/5 transition-all outline-none"
+                  placeholder="Ex: Secretaria de Educação"
+                  value={newEvent.org_name}
+                  onChange={(e) => setNewEvent({...newEvent, org_name: e.target.value})}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-1">Data e Horário</label>
+                  <input 
+                    type="datetime-local" 
+                    required
+                    className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-gov-blue/5 transition-all outline-none"
+                    value={newEvent.date_start}
+                    onChange={(e) => setNewEvent({...newEvent, date_start: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-1">Vagas Ofertadas</label>
+                  <input 
+                    type="number" 
+                    required
+                    className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-gov-blue/5 transition-all outline-none"
+                    value={newEvent.total_slots}
+                    onChange={(e) => setNewEvent({...newEvent, total_slots: parseInt(e.target.value)})}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-1">Localização Oficial</label>
+                <input 
+                  type="text" 
+                  required
+                  className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-gov-blue/5 transition-all outline-none"
+                  placeholder="Ex: Cine Teatro Henfil"
+                  value={newEvent.location}
+                  onChange={(e) => setNewEvent({...newEvent, location: e.target.value})}
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-1">Descrição do Evento</label>
+                <textarea 
+                  required
+                  className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-4 focus:ring-gov-blue/5 transition-all outline-none min-h-[100px] resize-none"
+                  placeholder="Descreva as diretrizes do evento..."
+                  value={newEvent.description}
+                  onChange={(e) => setNewEvent({...newEvent, description: e.target.value})}
+                />
+              </div>
+
+              <div className="pt-4 flex gap-4">
+                <button 
+                  type="button" 
+                  onClick={() => setShowModal(false)}
+                  className="flex-1 py-5 bg-gray-50 text-gray-400 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:text-gray-900 hover:bg-gray-100 transition-all"
+                >
+                  Cancelar
+                </button>
+                <button 
+                  type="submit"
+                  className="flex-1 py-5 bg-gov-blue text-white rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-gov-blue-dark transition-all shadow-xl shadow-blue-100"
+                >
+                  Confirmar Registro
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
