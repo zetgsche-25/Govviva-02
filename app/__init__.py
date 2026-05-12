@@ -15,10 +15,12 @@ def create_app(config_class=Config):
     from .routes.auth import auth_bp
     from .routes.events import event_bp
     from .routes.registrations import registration_bp
+    from .routes.docs import docs_bp
 
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(event_bp, url_prefix='/api/events')
     app.register_blueprint(registration_bp, url_prefix='/api/registrations')
+    app.register_blueprint(docs_bp, url_prefix='/docs')
 
     with app.app_context():
         db.create_all()

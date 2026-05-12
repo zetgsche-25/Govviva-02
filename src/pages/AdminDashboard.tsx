@@ -12,7 +12,8 @@ import {
   AlertCircle,
   ArrowUpRight,
   TrendingUp,
-  Clock
+  Clock,
+  FileText
 } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -90,13 +91,24 @@ export const AdminDashboard: React.FC = () => {
               <h1 className="text-4xl font-black text-gray-900 uppercase tracking-tighter leading-none">Painel de <span className="text-gov-blue">Controle Administrativo</span></h1>
               <p className="text-gray-400 font-medium mt-4 max-w-xl">Gerenciamento oficial de atividades, monitoramento de vagas e acompanhamento de adesão pública.</p>
             </div>
-            <button 
-              onClick={() => setShowModal(true)}
-              className="flex items-center gap-3 bg-gov-blue text-white px-10 py-5 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-gov-blue-dark transition-all shadow-2xl shadow-blue-100 active:scale-95"
-            >
-              <Plus className="w-5 h-5" />
-              Criar Novo Evento
-            </button>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <a 
+                href="/docs/render" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-3 bg-white text-gray-700 border-2 border-gray-100 px-8 py-5 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-gray-50 transition-all shadow-sm active:scale-95"
+              >
+                <FileText className="w-5 h-5 text-gov-blue" />
+                Documentação PDF
+              </a>
+              <button 
+                onClick={() => setShowModal(true)}
+                className="flex items-center justify-center gap-3 bg-gov-blue text-white px-10 py-5 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-gov-blue-dark transition-all shadow-2xl shadow-blue-100 active:scale-95"
+              >
+                <Plus className="w-5 h-5" />
+                Criar Novo Evento
+              </button>
+            </div>
           </div>
         </div>
       </div>

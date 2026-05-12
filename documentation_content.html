@@ -1,0 +1,154 @@
+<h1>GOVVIVA - Documentação Técnica do Sistema</h1>
+<p>Este documento fornece uma visão técnica detalhada do projeto <strong>GOVVIVA</strong>, um sistema institucional de gerenciamento de eventos públicos, migrado para uma arquitetura profissional utilizando Python/Flask no backend e React no frontend.</p>
+<hr>
+<h2>1. VISÃO GERAL DO SISTEMA</h2>
+<p>O <strong>GOVVIVA</strong> é uma plataforma desenvolvida para modernizar a gestão de eventos governamentais. Ele permite que instituições públicas publiquem atividades oficiais, gerenciem vagas em tempo real e forneçam certificados de participação aos cidadãos de forma automatizada e segura.</p>
+<ul>
+<li><strong>Objetivo:</strong> Centralizar a oferta de eventos públicos e simplificar o processo de inscrição para o cidadão.</li>
+<li><strong>Público-alvo:</strong> Secretarias municipais, servidores públicos e cidadãos em geral.</li>
+<li><strong>Problema que resolve:</strong> Fragmentação de canais de inscrição, falta de controle sobre vagas públicas e dificuldade na emissão de comprovantes de participação.</li>
+</ul>
+<hr>
+<h2>2. ARQUITETURA DO SISTEMA</h2>
+<p>O sistema adota uma arquitetura <strong>monolítica modular</strong>, projetada para ser eficiente e fácil de manter em ambientes escaláveis.</p>
+<ul>
+<li><strong>Backend (Flask):</strong> Responsável por todas as regras de negócio, persistência de dados e segurança. Implementa uma API RESTful completa.</li>
+<li><strong>Frontend (React + TypeScript):</strong> Uma SPA (Single Page Application) moderna, focada em UX institucional, consumindo a API REST de forma assíncrona.</li>
+<li><strong>Comunicação:</strong> Ocorre exclusivamente via JSON sobre HTTP, utilizando tokens JWT para autenticação.</li>
+<li><strong>Serviço Integrado:</strong> O backend atua tanto como servidor de API quanto servidor de arquivos estáticos, servindo o bundle compilado do React a partir do diretório <code>dist/</code>.</li>
+</ul>
+<hr>
+<h2>3. STACK TECNOLÓGICA</h2>
+<h3>Backend</h3>
+<ul>
+<li><strong>Linguagem:</strong> Python 3.x</li>
+<li><strong>Framework:</strong> Flask</li>
+<li><strong>ORM:</strong> SQLAlchemy (via Flask-SQLAlchemy)</li>
+<li><strong>Autenticação:</strong> JWT (via Flask-JWT-Extended)</li>
+<li><strong>Segurança:</strong> Werkzeug (Hashing de senhas)</li>
+<li><strong>CORS:</strong> Flask-Cors</li>
+</ul>
+<h3>Frontend</h3>
+<ul>
+<li><strong>Framework:</strong> React 19</li>
+<li><strong>Linguagem:</strong> TypeScript</li>
+<li><strong>Build Tool:</strong> Vite</li>
+<li><strong>Estilização:</strong> Tailwind CSS 4.0</li>
+<li><strong>Animações:</strong> Motion (framer-motion)</li>
+<li><strong>Ícones:</strong> Lucide React</li>
+<li><strong>Geração de Certificados:</strong> jsPDF</li>
+</ul>
+<h3>Banco de Dados</h3>
+<ul>
+<li><strong>Engine:</strong> SQLite (Arquivo local <code>database.db</code>)</li>
+<li><strong>Persistência:</strong> Real e imediata em disco.</li>
+</ul>
+<hr>
+<h2>4. ESTRUTURA DO PROJETO</h2>
+<p>O projeto segue uma organização modular:</p>
+<ul>
+<li><code>app/__init__.py</code>: Factory da aplicação, inicialização de extensões e registro de Blueprints.</li>
+<li><code>app/models.py</code>: Definição das entidades do banco de dados e lógica de serialização (to_dict).</li>
+<li><code>app/services.py</code>: Camada de serviço contendo a lógica de negócio (ex: controle de vagas).</li>
+<li><code>app/routes/</code>: Subdiretório contendo os módulos de rotas (auth, events, registrations).</li>
+<li><code>app/extensions.py</code>: Instâncias globais do SQLAlchemy e JWT.</li>
+<li><code>config.py</code>: Centralização de variáveis de ambiente e configurações de sistema.</li>
+<li><code>run.py</code>: Script principal que inicia o servidor Flask e gerencia a entrega do frontend.</li>
+<li><code>src/</code>: Código fonte do frontend React (componentes, páginas, hooks, serviços).</li>
+<li><code>requirements.txt</code>: Lista de dependências Python.</li>
+<li><code>package.json</code>: Gestão de scripts de build e dependências Node.js.</li>
+</ul>
+<hr>
+<h2>5. BANCO DE DADOS</h2>
+<h3>Tabelas Principais</h3>
+<ol>
+<li><strong>Users (<code>users</code>)</strong>:<ul>
+<li><code>id</code> (PK), <code>name</code>, <code>email</code> (Unique), <code>password_hash</code>, <code>role</code> (CITIZEN/ADMIN), <code>org_id</code>, <code>created_at</code>.</li>
+</ul>
+</li>
+<li><strong>Events (<code>events</code>)</strong>:<ul>
+<li><code>id</code> (PK), <code>title</code>, <code>description</code>, <code>date_start</code>, <code>location</code>, <code>total_slots</code>, <code>available_slots</code>, <code>category</code>, <code>status</code>, <code>creator_id</code> (FK), <code>org_name</code>.</li>
+</ul>
+</li>
+<li><strong>Registrations (<code>registrations</code>)</strong>:<ul>
+<li><code>id</code> (PK), <code>user_id</code> (FK), <code>event_id</code> (FK), <code>registered_at</code>, <code>status</code>.</li>
+<li><strong>Constraint:</strong> <code>UniqueConstraint(&#39;user_id&#39;, &#39;event_id&#39;)</code> para impedir inscrições duplicadas.</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2>6. AUTENTICAÇÃO E SEGURANÇA</h2>
+<ul>
+<li><strong>JWT (JSON Web Token):</strong> Utilizado para persistência de sessão. O token contém a identidade do usuário e é exigido no header <code>Authorization: Bearer &lt;token&gt;</code> em rotas protegidas.</li>
+<li><strong>Hashing de Senhas:</strong> Nenhuma senha é armazenada em texto plano. Utiliza-se <code>pbkdf2:sha256</code> via Werkzeug.</li>
+<li><strong>RBAC (Role Based Access Control):</strong><ul>
+<li><strong>CITIZEN:</strong> Acesso às inscrições e certificados.</li>
+<li><strong>ADMIN:</strong> Acesso ao painel de controle, criação de eventos e monitoramento de adesão.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2>7. FUNCIONALIDADES IMPLEMENTADAS</h2>
+<ul>
+<li><strong>Autenticação Completa:</strong> Fluxo de Registro e Login com validação de credenciais.</li>
+<li><strong>Catálogo Institucional:</strong> Listagem dinâmica de eventos ativos com filtros por categoria.</li>
+<li><strong>Sistema de Inscrição:</strong> Processo em um clique, com validação de vagas em tempo real.</li>
+<li><strong>Certificação PDF:</strong> Geração de certificados com assinatura visual e protocolo de autenticidade (jsPDF).</li>
+<li><strong>Painel Administrativo:</strong> Dashboard para criação de eventos e visualização de indicadores.</li>
+<li><strong>Protocolos de Segurança:</strong> Números de protocolo oficiais gerados para cada inscrição e evento.</li>
+</ul>
+<hr>
+<h2>8. REGRAS DE NEGÓCIO</h2>
+<ol>
+<li><strong>Concorrência de Vagas:</strong> No momento da inscrição, o sistema verifica se <code>available_slots &gt; 0</code>. A operação de decremento é atômica via SQLAlchemy.</li>
+<li><strong>Integridade de Participação:</strong> O cidadão não pode se inscrever duas vezes no mesmo evento (erro 400).</li>
+<li><strong>Persistência:</strong> Todos os dados são salvos no <code>database.db</code>. Reiniciar o servidor não apaga os dados.</li>
+<li><strong>Seeding Automático:</strong> Na primeira execução, o sistema cria o administrador padrão e eventos de exemplo.</li>
+</ol>
+<hr>
+<h2>9. FLUXO COMPLETO DO SISTEMA</h2>
+<ol>
+<li><strong>Cadastro:</strong> Usuário cria conta como <code>CITIZEN</code>.</li>
+<li><strong>Login:</strong> Usuário autentica e recebe um token JWT armazenado localmente.</li>
+<li><strong>Navegação:</strong> Usuário visualiza eventos na Home.</li>
+<li><strong>Inscrição:</strong> Usuário escolhe um evento. O frontend envia o token. O backend valida a duplicidade e disponibilidade de vaga.</li>
+<li><strong>Confirmação:</strong> A vaga é reservada e a inscrição confirmada.</li>
+<li><strong>Pós-Evento:</strong> O usuário acessa &quot;Minhas Atividades&quot; e emite o certificado digital.</li>
+</ol>
+<hr>
+<h2>10. INTEGRAÇÃO FRONTEND/BACKEND</h2>
+<ul>
+<li><strong>Base URL:</strong> O frontend utiliza <code>/api</code> relativo ao host atual.</li>
+<li><strong>Interceptors:</strong> O sistema utiliza uma instância configurada do Axios (ou fetch) que injeta o token JWT automaticamente nos cabeçalhos de cada requisição.</li>
+<li><strong>Sincronização:</strong> Estados globais (como usuário logado) são gerenciados via React Context para garantir consistência visual.</li>
+</ul>
+<hr>
+<h2>11. EXECUÇÃO DO PROJETO</h2>
+<h3>Pré-requisitos</h3>
+<ul>
+<li>Python 3.10+</li>
+<li>Node.js (apenas para build do frontend)</li>
+</ul>
+<h3>Comandos de Inicialização</h3>
+<pre><code class="language-bash"># 1. Instalar dependências Python
+pip install -r requirements.txt
+
+# 2. Build do Frontend
+npm run build
+
+# 3. Iniciar o Sistema (Backend + Frontend)
+python3 run.py
+</code></pre>
+<p>O sistema estará disponível em <code>http://localhost:3000</code>.</p>
+<hr>
+<h2>12. VALIDAÇÃO DE FUNCIONAMENTO</h2>
+<ul>
+<li><strong>Login Admin:</strong> <code>admin@marica.rj.gov.br</code> / <code>admin123</code></li>
+<li><strong>Persistência:</strong> Testada e confirmada via SQLite.</li>
+<li><strong>Fluxo de Inscrição:</strong> Validado com tratamento de erros para vagas esgotadas e duplicidade.</li>
+</ul>
+<hr>
+<h2>13. CONCLUSÃO TÉCNICA</h2>
+<p>O sistema <strong>GOVVIVA</strong> evoluiu de um protótipo para um <strong>MVP Profissional</strong>. A arquitetura atual, baseada em Flask e React, segue os padrões de mercado para sistemas de média complexidade, garantindo segurança, performance e uma experiência de usuário polida.</p>
+<p><strong>Classificação:</strong> [X] MVP Profissional / Pronto para Demonstração</p>
+<p>O projeto está tecnicamente sólido para ser apresentado como solução institucional integrada.</p>
