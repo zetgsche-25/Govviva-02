@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "python3 run.py",
+    "dev": "python3 -m pip install -r requirements.txt || python3 -m pip install -r requirements.txt --break-system-packages || pip install -r requirements.txt; python3 run.py",
     "build": "vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist",

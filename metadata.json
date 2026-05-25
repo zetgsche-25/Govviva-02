@@ -2,5 +2,7 @@
   "name": "GOVVIVA",
   "description": "Plataforma integrada de gestão de eventos, formação e participação cidadã municipal.",
   "requestFramePermissions": [],
-  "majorCapabilities": []
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

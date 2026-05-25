@@ -1,4 +1,4 @@
-from ..models import db, User, Event, Registration
+from .models import db, User, Event, Registration
 from datetime import datetime
 
 class UserService:
