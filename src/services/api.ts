@@ -1,55 +1,35 @@
-const BASE_URL = `${(import.meta.env.VITE_API_URL || 'http://localhost:3000').replace(/\/$/, '')}/api`;
+import axios from 'axios';
 
-const getHeaders = () => {
-  const token = localStorage.getItem('govviva_token');
-  return {
-    'Content-Type': 'application/json',
-    ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
-  };
-};
+const API_URL =
+  import.meta.env.VITE_API_URL?.replace(/\/$/, '') ||
+  'http://localhost:3000';
 
-const handleUnauthorized = () => {
-  localStorage.removeItem('govviva_token');
-  // We can't easily redirect here without react-router or window.location
-  // But we can at least clear the token. 
-  // The AuthContext will catch this if it's polling or on next request.
-  window.dispatchEvent(new Event('auth_expired'));
-};
-
-export const api = {
-  async get(endpoint: string) {
-    const response = await fetch(`${BASE_URL}${endpoint}`, {
-      headers: getHeaders(),
-    });
-    
-    if (response.status === 401) {
-      handleUnauthorized();
-      throw new Error('Sessão expirada. Por favor, faça login novamente.');
-    }
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Erro na requisição');
-    }
-    return response.json();
-  },
-
-  async post(endpoint: string, data: any) {
-    const response = await fetch(`${BASE_URL}${endpoint}`, {
-      method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify(data),
-    });
-
-    if (response.status === 401) {
-      handleUnauthorized();
-      throw new Error('Sessão expirada. Por favor, faça login novamente.');
-    }
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Erro na requisição');
-    }
-    return response.json();
+export const api = axios.create({
+  baseURL: `${API_URL}/api`,
+  headers: {
+    'Content-Type': 'application/json'
   }
-};
+}) as any;
+
+api.interceptors.request.use((config: any) => {
+  const token = localStorage.getItem('govviva_token');
+  if (token && config.headers) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+api.interceptors.response.use(
+  (response: any) => {
+    return response.data;
+  },
+  (error: any) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('govviva_token');
+      window.dispatchEvent(new Event('auth_expired'));
+      return Promise.reject(new Error('Sessão expirada. Por favor, faça login novamente.'));
+    }
+    const apiError = error.response?.data?.error || 'Erro na requisição';
+    return Promise.reject(new Error(apiError));
+  }
+);
