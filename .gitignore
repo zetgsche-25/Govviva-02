@@ -6,3 +6,19 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Python files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+ENV/
+env/
+
+# SQLite databases & instances
+database.db
+instance/
+*.db
+*.sqlite
