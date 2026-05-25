@@ -1,4 +1,4 @@
-const BASE_URL = (((import.meta as any).env?.VITE_API_URL || '') as string).replace(/\/$/, '') + '/api';
+const BASE_URL = `${(import.meta.env.VITE_API_URL || 'http://localhost:3000').replace(/\/$/, '')}/api`;
 
 const getHeaders = () => {
   const token = localStorage.getItem('govviva_token');
