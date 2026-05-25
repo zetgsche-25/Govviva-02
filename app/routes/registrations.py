@@ -5,6 +5,7 @@ from ..models import Registration, Event
 
 registration_bp = Blueprint('registrations', __name__, strict_slashes=False)
 
+@registration_bp.route('', methods=['POST'])
 @registration_bp.route('/', methods=['POST'])
 @jwt_required()
 def enroll():

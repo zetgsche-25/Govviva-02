@@ -5,11 +5,13 @@ from ..models import User
 
 event_bp = Blueprint('events', __name__, strict_slashes=False)
 
+@event_bp.route('', methods=['GET'])
 @event_bp.route('/', methods=['GET'])
 def list_events():
     events = EventService.list_active()
     return jsonify([e.to_dict() for e in events])
 
+@event_bp.route('', methods=['POST'])
 @event_bp.route('/', methods=['POST'])
 @jwt_required()
 def create_event():
