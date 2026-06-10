@@ -9,7 +9,20 @@ def create_app(config_class=Config):
     # Initialize Extensions
     db.init_app(app)
     jwt.init_app(app)
-    cors.init_app(app)
+    
+    import re
+    cors.init_app(app, resources={
+        r"/*": {
+            "origins": [
+                "https://govviva-02.vercel.app",
+                re.compile(r"^https://.*\.vercel\.app$"),
+                re.compile(r"^https://.*\.run\.app$"),
+                re.compile(r"^https?://localhost(:\d+)?$")
+            ],
+            "methods": ["GET", "HEAD", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
+            "allow_headers": ["Content-Type", "Authorization", "Access-Control-Allow-Headers"]
+        }
+    })
 
     # Register Blueprints
     from .routes.auth import auth_bp
