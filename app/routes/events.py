@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from ..services import EventService
 from ..models import User
 
-event_bp = Blueprint('events', __name__, strict_slashes=False)
+event_bp = Blueprint('events', __name__)
 
 @event_bp.route('', methods=['GET'])
 @event_bp.route('/', methods=['GET'])

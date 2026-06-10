@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from ..services import RegistrationService
 from ..models import Registration, Event
 
-registration_bp = Blueprint('registrations', __name__, strict_slashes=False)
+registration_bp = Blueprint('registrations', __name__)
 
 @registration_bp.route('', methods=['POST'])
 @registration_bp.route('/', methods=['POST'])
