@@ -27,7 +27,7 @@ def login():
     if not user or not user.check_password(data.get('password')):
         return jsonify({"error": "Credenciais inválidas"}), 401
     
-    token = create_access_token(identity=user.id)
+    token = create_access_token(identity=str(user.id))
     return jsonify({"token": token, "user": user.to_dict()}), 200
 
 @auth_bp.route('/me', methods=['GET'])
