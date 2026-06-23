@@ -2,8 +2,17 @@ export interface User {
   id: number;
   name: string;
   email: string;
+  cpf?: string;
   role: 'CITIZEN' | 'ADMIN';
   org_id?: string;
+  govbr_sub?: string;
+  govbr_level?: 'BRONZE' | 'SILVER' | 'GOLD';
+  govbr_authenticated?: boolean;
+  lgpd_terms_accepted?: boolean;
+  lgpd_privacy_accepted?: boolean;
+  lgpd_marketing_consented?: boolean;
+  lgpd_treatment_consented?: boolean;
+  lgpd_accepted_at?: string | null;
 }
 
 export interface Event {
@@ -16,12 +25,29 @@ export interface Event {
   available_slots: number;
   category: string;
   status: string;
+  workload?: number;
+  org_responsible?: string;
   org_id?: string;
   org_name?: string;
+  gestor_responsavel?: string;
+}
+
+export interface PresenceCheckInfo {
+  id: number | null;
+  registration_id: number;
+  check_in_time: string | null;
+  check_out_time: string | null;
+  location: string | null;
+  calculated_duration: number;
+  calculated_percentage: number;
+  status: 'PENDING' | 'APPROVED' | 'INCOMPLETE' | 'ABSENT';
 }
 
 export interface Registration {
   registration_id: number;
   status: string;
+  ticket_code?: string;
   event: Event;
+  presence?: PresenceCheckInfo | null;
 }
+

@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { LogOut, User as UserIcon, Calendar, Menu, X, ChevronRight, Globe, Shield } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { motion, AnimatePresence } from 'motion/react';
+import { NotificationBell } from './NotificationBell';
 
 export const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
@@ -77,18 +78,108 @@ export const Navbar: React.FC = () => {
                 Calendário
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gov-blue group-hover:w-full transition-all"></span>
               </Link>
+              <Link 
+                to="/certificados" 
+                className={`text-[11px] font-black uppercase tracking-[0.2em] py-2 transition-all relative group ${
+                  isActive('/certificados') ? 'text-gov-blue' : 'text-gray-400 hover:text-gov-blue'
+                }`}
+              >
+                Certificados
+                <span className={`absolute bottom-0 left-0 h-0.5 bg-gov-blue transition-all ${
+                  isActive('/certificados') ? 'w-full' : 'w-0 group-hover:w-full'
+                }`}></span>
+              </Link>
+              <Link 
+                to="/validar" 
+                className={`text-[11px] font-black uppercase tracking-[0.2em] py-2 transition-all relative group ${
+                  isActive('/validar') ? 'text-gov-blue' : 'text-gray-400 hover:text-gov-blue'
+                }`}
+              >
+                Verificar Assinatura 🛡️
+                <span className={`absolute bottom-0 left-0 h-0.5 bg-gov-blue transition-all ${
+                  isActive('/validar') ? 'w-full' : 'w-0 group-hover:w-full'
+                }`}></span>
+              </Link>
+              <Link 
+                to="/mobiledocs" 
+                className={`text-[11px] font-black uppercase tracking-[0.2em] py-2 transition-all relative group ${
+                  isActive('/mobiledocs') ? 'text-gov-blue' : 'text-gray-400 hover:text-gov-blue'
+                }`}
+              >
+                App Móvel 📱
+                <span className={`absolute bottom-0 left-0 h-0.5 bg-gov-blue transition-all ${
+                  isActive('/mobiledocs') ? 'w-full' : 'w-0 group-hover:w-full'
+                }`}></span>
+              </Link>
+              <Link 
+                to="/consultoria" 
+                className={`text-[11px] font-black uppercase tracking-[0.2em] py-2 transition-all relative group ${
+                  isActive('/consultoria') ? 'text-gov-blue' : 'text-gray-400 hover:text-gov-blue'
+                }`}
+              >
+                Visão 2.0 💡
+                <span className={`absolute bottom-0 left-0 h-0.5 bg-gov-blue transition-all ${
+                  isActive('/consultoria') ? 'w-full' : 'w-0 group-hover:w-full'
+                }`}></span>
+              </Link>
+              <Link 
+                to="/lgpd" 
+                className={`text-[11px] font-black uppercase tracking-[0.2em] py-2 transition-all relative group ${
+                  isActive('/lgpd') ? 'text-gov-blue' : 'text-gray-400 hover:text-gov-blue'
+                }`}
+              >
+                Privacidade LGPD ⚖️
+                <span className={`absolute bottom-0 left-0 h-0.5 bg-gov-blue transition-all ${
+                  isActive('/lgpd') ? 'w-full' : 'w-0 group-hover:w-full'
+                }`}></span>
+              </Link>
               {user && user.role === 'ADMIN' && (
-                <Link 
-                  to="/admin" 
-                  className={`text-[11px] font-black uppercase tracking-[0.2em] py-2 transition-all relative group ${
-                    isActive('/admin') ? 'text-gov-blue' : 'text-gray-400 hover:text-gov-blue'
-                  }`}
-                >
-                  Gestão Administrativa
-                  <span className={`absolute bottom-0 left-0 h-0.5 bg-gov-blue transition-all ${
-                    isActive('/admin') ? 'w-full' : 'w-0 group-hover:w-full'
-                  }`}></span>
-                </Link>
+                <>
+                  <Link 
+                    to="/admin" 
+                    className={`text-[11px] font-black uppercase tracking-[0.2em] py-2 transition-all relative group ${
+                      isActive('/admin') ? 'text-gov-blue' : 'text-gray-400 hover:text-gov-blue'
+                    }`}
+                  >
+                    Gestão Administrativa
+                    <span className={`absolute bottom-0 left-0 h-0.5 bg-gov-blue transition-all ${
+                      isActive('/admin') ? 'w-full' : 'w-0 group-hover:w-full'
+                    }`}></span>
+                  </Link>
+                  <Link 
+                    to="/organizador" 
+                    className={`text-[11px] font-black uppercase tracking-[0.2em] py-2 transition-all relative group ${
+                      isActive('/organizador') ? 'text-gov-blue' : 'text-gray-400 hover:text-gov-blue'
+                    }`}
+                  >
+                    Organizador GOVVIVA
+                    <span className={`absolute bottom-0 left-0 h-0.5 bg-gov-blue transition-all ${
+                      isActive('/organizador') ? 'w-full' : 'w-0 group-hover:w-full'
+                    }`}></span>
+                  </Link>
+                  <Link 
+                    to="/auditoria" 
+                    className={`text-[11px] font-black uppercase tracking-[0.2em] py-2 transition-all relative group ${
+                      isActive('/auditoria') ? 'text-gov-blue' : 'text-gray-400 hover:text-gov-blue'
+                    }`}
+                  >
+                    Auditoria Escalabilidade
+                    <span className={`absolute bottom-0 left-0 h-0.5 bg-gov-blue transition-all ${
+                      isActive('/auditoria') ? 'w-full' : 'w-0 group-hover:w-full'
+                    }`}></span>
+                  </Link>
+                  <Link 
+                    to="/relatorios" 
+                    className={`text-[11px] font-black uppercase tracking-[0.2em] py-2 transition-all relative group ${
+                      isActive('/relatorios') ? 'text-gov-blue' : 'text-gray-400 hover:text-gov-blue'
+                    }`}
+                  >
+                    Relatórios Executivos
+                    <span className={`absolute bottom-0 left-0 h-0.5 bg-gov-blue transition-all ${
+                      isActive('/relatorios') ? 'w-full' : 'w-0 group-hover:w-full'
+                    }`}></span>
+                  </Link>
+                </>
               )}
               {user && (
                 <Link 
@@ -109,11 +200,29 @@ export const Navbar: React.FC = () => {
             <div className="flex items-center gap-4">
               {user ? (
                 <div className="hidden lg:flex items-center gap-5 pl-8 border-l border-gray-100">
+                  <NotificationBell />
                   <div className="flex flex-col items-end">
-                    <span className="text-xs font-black text-gray-900 uppercase tracking-tight">{user.name.split(' ')[0]}</span>
-                    <span className="text-[9px] text-gov-blue font-black uppercase tracking-widest bg-blue-50 px-2 py-0.5 rounded mt-1">
-                      {user.role === 'ADMIN' ? 'Gestor Público' : 'Cidadão'}
-                    </span>
+                    <div className="flex items-center gap-1.5">
+                      {user.govbr_authenticated && (
+                        <span className="inline-flex items-center w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="Sessão autenticada via GOV.BR" />
+                      )}
+                      <span className="text-xs font-black text-gray-900 uppercase tracking-tight">{user.name.split(' ')[0]}</span>
+                    </div>
+                    {user.govbr_authenticated ? (
+                      <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded mt-1 border shadow-xs ${
+                        user.govbr_level === 'GOLD' 
+                          ? 'bg-amber-50 text-amber-700 border-amber-200' 
+                          : user.govbr_level === 'SILVER' 
+                          ? 'bg-slate-50 text-slate-600 border-slate-200' 
+                          : 'bg-orange-50 text-orange-700 border-orange-200'
+                      }`}>
+                        Gov.br • {user.govbr_level} 🇧🇷
+                      </span>
+                    ) : (
+                      <span className="text-[9px] text-gov-blue font-black uppercase tracking-widest bg-blue-50 px-2 py-0.5 rounded mt-1">
+                        {user.role === 'ADMIN' ? 'Gestor Público' : 'Cidadão'}
+                      </span>
+                    )}
                   </div>
                   <button
                     onClick={() => {
@@ -133,6 +242,12 @@ export const Navbar: React.FC = () => {
                 >
                   Identificar-se
                 </Link>
+              )}
+
+              {user && (
+                <div className="lg:hidden">
+                  <NotificationBell />
+                </div>
               )}
 
               {/* Mobile Menu Toggle */}
@@ -164,6 +279,41 @@ export const Navbar: React.FC = () => {
                   >
                     Home <ChevronRight className="w-4 h-4" />
                   </Link>
+                  <Link 
+                    to="/certificados" 
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex justify-between items-center text-sm font-black text-gray-900 uppercase tracking-widest bg-gray-50 p-5 rounded-2xl hover:bg-gov-blue-light hover:text-gov-blue transition-all"
+                  >
+                    Certificados <ChevronRight className="w-4 h-4" />
+                  </Link>
+                  <Link 
+                    to="/validar" 
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex justify-between items-center text-sm font-black text-gray-900 uppercase tracking-widest bg-gray-50 p-5 rounded-2xl hover:bg-gov-blue-light hover:text-gov-blue transition-all"
+                  >
+                    Verificar Assinatura 🛡️ <ChevronRight className="w-4 h-4" />
+                  </Link>
+                  <Link 
+                    to="/mobiledocs" 
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex justify-between items-center text-sm font-black text-gray-900 uppercase tracking-widest bg-gray-50 p-5 rounded-2xl hover:bg-gov-blue-light hover:text-gov-blue transition-all"
+                  >
+                    Especificações do App Móvel 📱 <ChevronRight className="w-4 h-4" />
+                  </Link>
+                  <Link 
+                    to="/consultoria" 
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex justify-between items-center text-sm font-black text-gray-900 uppercase tracking-widest bg-gray-50 p-5 rounded-2xl hover:bg-gov-blue-light hover:text-gov-blue transition-all"
+                  >
+                    Estudo e Visão GOVVIVA 2.0 💡 <ChevronRight className="w-4 h-4" />
+                  </Link>
+                  <Link 
+                    to="/lgpd" 
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex justify-between items-center text-sm font-black text-gray-900 uppercase tracking-widest bg-gray-50 p-5 rounded-2xl hover:bg-gov-blue-light hover:text-gov-blue transition-all"
+                  >
+                    Privacidade & LGPD ⚖️ <ChevronRight className="w-4 h-4" />
+                  </Link>
                   {user && (
                     <Link 
                       to="/my-registrations" 
@@ -172,6 +322,38 @@ export const Navbar: React.FC = () => {
                     >
                       Minhas Inscrições <ChevronRight className="w-4 h-4" />
                     </Link>
+                  )}
+                  {user && user.role === 'ADMIN' && (
+                    <>
+                      <Link 
+                        to="/admin" 
+                        onClick={() => setIsMenuOpen(false)}
+                        className="flex justify-between items-center text-sm font-black text-gray-900 uppercase tracking-widest bg-gray-50 p-5 rounded-2xl hover:bg-gov-blue-light hover:text-gov-blue transition-all"
+                      >
+                        Gestão de Eventos <ChevronRight className="w-4 h-4" />
+                      </Link>
+                      <Link 
+                        to="/organizador" 
+                        onClick={() => setIsMenuOpen(false)}
+                        className="flex justify-between items-center text-sm font-black text-gray-900 uppercase tracking-widest bg-gray-50 p-5 rounded-2xl hover:bg-gov-blue-light hover:text-gov-blue transition-all"
+                      >
+                        Organizador GOVVIVA <ChevronRight className="w-4 h-4" />
+                      </Link>
+                      <Link 
+                        to="/auditoria" 
+                        onClick={() => setIsMenuOpen(false)}
+                        className="flex justify-between items-center text-sm font-black text-gray-900 uppercase tracking-widest bg-gray-50 p-5 rounded-2xl hover:bg-gov-blue-light hover:text-gov-blue transition-all"
+                      >
+                        Auditoria Escalabilidade <ChevronRight className="w-4 h-4" />
+                      </Link>
+                      <Link 
+                        to="/relatorios" 
+                        onClick={() => setIsMenuOpen(false)}
+                        className="flex justify-between items-center text-sm font-black text-gray-900 uppercase tracking-widest bg-gray-50 p-5 rounded-2xl hover:bg-gov-blue-light hover:text-gov-blue transition-all"
+                      >
+                        Relatórios Executivos <ChevronRight className="w-4 h-4" />
+                      </Link>
+                    </>
                   )}
                 </div>
 

@@ -29,14 +29,24 @@ def create_app(config_class=Config):
     from .routes.events import event_bp
     from .routes.registrations import registration_bp
     from .routes.docs import docs_bp
+    from .routes.presence import presence_bp
+    from .routes.certificates import certificates_bp, certificate_singular_bp
+    from .routes.reports import reports_bp
+    from .routes.notifications import notifications_bp
 
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(event_bp, url_prefix='/api/events')
     app.register_blueprint(registration_bp, url_prefix='/api/registrations')
+    app.register_blueprint(presence_bp, url_prefix='/api/presence')
+    app.register_blueprint(certificates_bp, url_prefix='/api/certificates')
+    app.register_blueprint(certificate_singular_bp, url_prefix='/api/certificate')
+    app.register_blueprint(reports_bp, url_prefix='/api/reports')
+    app.register_blueprint(notifications_bp, url_prefix='/api/notifications')
     app.register_blueprint(docs_bp, url_prefix='/docs')
 
     with app.app_context():
-        db.create_all()
+        from .migrations import run_migrations
+        run_migrations(app)
         seed_db()
 
     return app

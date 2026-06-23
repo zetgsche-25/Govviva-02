@@ -8,6 +8,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
+  loginWithGovBr: (name: string, email: string, cpf: string, level: 'BRONZE' | 'SILVER' | 'GOLD') => Promise<void>;
   logout: () => void;
 }
 
@@ -31,6 +32,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('govviva_token', token);
       setToken(token);
       setUser(user);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const loginWithGovBr = async (name: string, email: string, cpf: string, level: 'BRONZE' | 'SILVER' | 'GOLD') => {
+    try {
+      const data = await api.post('/auth/govbr/simulate', { name, email, cpf, govbr_level: level });
+      const { user: returnedUser, token: returnedToken } = data;
+      localStorage.setItem('govviva_token', returnedToken);
+      setToken(returnedToken);
+      setUser(returnedUser);
     } catch (error) {
       throw error;
     }
@@ -74,6 +87,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isAuthenticated: !!user,
         loading,
         login,
+        loginWithGovBr,
         logout,
       }}
     >

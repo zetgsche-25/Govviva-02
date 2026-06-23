@@ -16,21 +16,38 @@ def enroll():
     if error:
         return jsonify({"error": error}), 400
     
+    # Emit "Inscrição Aprovada" notification
+    try:
+        ev = Event.query.get(data.get('event_id'))
+        if ev:
+            from .notifications import create_notification
+            create_notification(
+                user_id=user_id,
+                title="Inscrição Aprovada",
+                message=f"Sua inscrição para a atividade '{ev.title}' foi processada e aprovada com sucesso! Código do ticket de entrada: {reg.ticket_code}."
+            )
+    except Exception as ne:
+        print(f"[NOTIFICATION WARNING] Failed to notify registration: {ne}")
+    
     return jsonify({"message": "Inscrição confirmada!", "id": reg.id}), 201
 
 @registration_bp.route('/me', methods=['GET'])
 @jwt_required()
 def my_registrations():
     user_id = get_jwt_identity()
+    from ..models import PresenceCheck
     regs = Registration.query.filter_by(user_id=user_id).all()
     
     # Detalhar eventos nas inscrições
     result = []
     for r in regs:
         ev = Event.query.get(r.event_id)
+        presence = PresenceCheck.query.filter_by(registration_id=r.id).first()
         result.append({
             "registration_id": r.id,
             "status": r.status,
-            "event": ev.to_dict()
+            "ticket_code": r.ticket_code,
+            "event": ev.to_dict() if ev else None,
+            "presence": presence.to_dict() if presence else None
         })
     return jsonify(result)
