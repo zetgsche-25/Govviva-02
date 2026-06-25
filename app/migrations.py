@@ -140,7 +140,7 @@ def run_migrations(app):
                     db.session.rollback()
                     print(f"[MIGRATION WARNING] Failed to add 'gestor_responsavel' column to 'events': {e}")
 
-        # Audit Table 'registrations' for 'ticket_code'
+        # Audit Table 'registrations' for 'ticket_code' and new QR columns
         if inspector.has_table('registrations'):
             columns = [c['name'] for c in inspector.get_columns('registrations')]
             if 'ticket_code' not in columns:
@@ -151,6 +151,50 @@ def run_migrations(app):
                 except Exception as e:
                     db.session.rollback()
                     print(f"[MIGRATION WARNING] Failed to add 'ticket_code' column to 'registrations': {e}")
+            
+            if 'ticket_uuid' not in columns:
+                try:
+                    db.session.execute(text("ALTER TABLE registrations ADD COLUMN ticket_uuid VARCHAR(100) NULL"))
+                    db.session.commit()
+                except Exception:
+                    db.session.rollback()
+
+            if 'qrcode_encrypted' not in columns:
+                try:
+                    db.session.execute(text("ALTER TABLE registrations ADD COLUMN qrcode_encrypted TEXT NULL"))
+                    db.session.commit()
+                except Exception:
+                    db.session.rollback()
+
+            if 'security_hash' not in columns:
+                try:
+                    db.session.execute(text("ALTER TABLE registrations ADD COLUMN security_hash VARCHAR(256) NULL"))
+                    db.session.commit()
+                except Exception:
+                    db.session.rollback()
+
+        # Audit Table 'presence_checks' for auditing and organizers
+        if inspector.has_table('presence_checks'):
+            columns = [c['name'] for c in inspector.get_columns('presence_checks')]
+            new_presence_cols = {
+                'check_in_ip': 'VARCHAR(45) NULL',
+                'check_in_device': 'VARCHAR(255) NULL',
+                'check_out_ip': 'VARCHAR(45) NULL',
+                'check_out_device': 'VARCHAR(255) NULL',
+                'check_in_organizer_id': 'INTEGER NULL',
+                'check_out_organizer_id': 'INTEGER NULL',
+                'check_in_hash': 'VARCHAR(256) NULL',
+                'check_out_hash': 'VARCHAR(256) NULL'
+            }
+            for col_name, col_type in new_presence_cols.items():
+                if col_name not in columns:
+                    try:
+                        db.session.execute(text(f"ALTER TABLE presence_checks ADD COLUMN {col_name} {col_type}"))
+                        db.session.commit()
+                        print(f"[MIGRATION] Successfully added column '{col_name}' to 'presence_checks' table.")
+                    except Exception as e:
+                        db.session.rollback()
+                        print(f"[MIGRATION WARNING] Failed to add column '{col_name}' to 'presence_checks': {e}")
 
         # Ensure unique index/constraint for ticket_code (if supported and not existent)
         # SQLAlchemy handles unique=True inside db.create_all on table creation, 

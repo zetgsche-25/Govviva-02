@@ -325,3 +325,89 @@ def system_health():
         },
         "error_logs": error_logs
     })
+
+@reports_bp.route('/organizer/stats', methods=['GET'])
+@jwt_required()
+def organizer_stats():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    if not user or user.role not in ['ADMIN', 'ORGANIZER']:
+        return jsonify({"error": "Acesso negado"}), 403
+
+    # Se for ADMIN, ele vê tudo. Se for ORGANIZER, ele vê apenas os seus eventos.
+    if user.role == 'ADMIN':
+        events = Event.query.all()
+    else:
+        events = Event.query.filter(
+            (Event.creator_id == user.id) | (Event.org_id == user.org_id)
+        ).all()
+
+    total_events = len(events)
+    total_registrations = 0
+    total_present = 0
+    total_absent = 0
+    total_certificates = 0
+    total_slots = 0
+    total_workload = 0
+
+    event_list = []
+    for ev in events:
+        # Inscritos
+        reg_count = Registration.query.filter_by(event_id=ev.id, status='CONFIRMED').count()
+        total_registrations += reg_count
+        
+        # Presentes (PresenceCheck com status 'APPROVED' ou checkin_time preenchido)
+        pres_count = db.session.query(func.count(PresenceCheck.id))\
+            .join(Registration, PresenceCheck.registration_id == Registration.id)\
+            .filter(Registration.event_id == ev.id)\
+            .filter((PresenceCheck.check_in_time.isnot(None)))\
+            .scalar() or 0
+        total_present += pres_count
+        
+        # Faltantes (Inscritos que não têm check-in)
+        abs_count = reg_count - pres_count
+        if abs_count < 0:
+            abs_count = 0
+        total_absent += abs_count
+
+        # Certificados emitidos
+        cert_count = db.session.query(func.count(Certificate.id))\
+            .join(Registration, Certificate.registration_id == Registration.id)\
+            .filter(Registration.event_id == ev.id)\
+            .scalar() or 0
+        total_certificates += cert_count
+
+        total_slots += ev.total_slots
+        total_workload += ev.workload or 0
+
+        event_list.append({
+            "id": ev.id,
+            "title": ev.title,
+            "location": ev.location,
+            "date_start": ev.date_start.isoformat(),
+            "status": ev.status,
+            "workload": ev.workload,
+            "total_slots": ev.total_slots,
+            "available_slots": ev.available_slots,
+            "registrations_count": reg_count,
+            "present_count": pres_count,
+            "absent_count": abs_count,
+            "certificates_count": cert_count,
+            "occupancy_rate": round((reg_count / ev.total_slots * 100.0) if ev.total_slots > 0 else 0.0, 2)
+        })
+
+    occupancy_rate = round((total_registrations / total_slots * 100.0) if total_slots > 0 else 0.0, 2)
+
+    return jsonify({
+        "summary": {
+            "total_events": total_events,
+            "total_registrations": total_registrations,
+            "total_present": total_present,
+            "total_absent": total_absent,
+            "total_certificates": total_certificates,
+            "total_slots": total_slots,
+            "occupancy_rate": occupancy_rate,
+            "total_workload": total_workload
+        },
+        "events": event_list
+    }), 200

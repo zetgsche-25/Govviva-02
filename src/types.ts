@@ -47,7 +47,17 @@ export interface Registration {
   registration_id: number;
   status: string;
   ticket_code?: string;
+  ticket_uuid?: string;
+  qrcode_encrypted?: string;
+  security_hash?: string;
   event: Event;
   presence?: PresenceCheckInfo | null;
+  certificate?: {
+    id: number;
+    code: string;
+    issued_at: string;
+    hash_verification: string;
+    is_publicly_available: boolean;
+  } | null;
 }
 

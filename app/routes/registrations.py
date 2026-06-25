@@ -35,7 +35,7 @@ def enroll():
 @jwt_required()
 def my_registrations():
     user_id = get_jwt_identity()
-    from ..models import PresenceCheck
+    from ..models import PresenceCheck, Certificate
     regs = Registration.query.filter_by(user_id=user_id).all()
     
     # Detalhar eventos nas inscrições
@@ -43,11 +43,16 @@ def my_registrations():
     for r in regs:
         ev = Event.query.get(r.event_id)
         presence = PresenceCheck.query.filter_by(registration_id=r.id).first()
+        cert = Certificate.query.filter_by(registration_id=r.id).first()
         result.append({
             "registration_id": r.id,
             "status": r.status,
             "ticket_code": r.ticket_code,
+            "ticket_uuid": r.ticket_uuid,
+            "qrcode_encrypted": r.qrcode_encrypted,
+            "security_hash": r.security_hash,
             "event": ev.to_dict() if ev else None,
-            "presence": presence.to_dict() if presence else None
+            "presence": presence.to_dict() if presence else None,
+            "certificate": cert.to_dict() if cert else None
         })
     return jsonify(result)

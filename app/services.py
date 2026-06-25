@@ -70,11 +70,27 @@ class RegistrationService:
 
         try:
             import uuid
+            import hashlib
+            import base64
+            
+            ticket_uuid = str(uuid.uuid4())
             ticket = f"GOV-TKT-{uuid.uuid4().hex[:12].upper()}"
             while Registration.query.filter_by(ticket_code=ticket).first():
                 ticket = f"GOV-TKT-{uuid.uuid4().hex[:12].upper()}"
 
-            reg = Registration(user_id=user_id, event_id=event_id, ticket_code=ticket)
+            # Calculate SHA-256 security hash and encrypted QR Code
+            sec_hash = hashlib.sha256(f"{user_id}-{event_id}-{ticket_uuid}-govviva-secure-salt".encode('utf-8')).hexdigest()
+            qr_raw = f"GOVVIVA-SECURE-V1|{user_id}|{event_id}|{ticket_uuid}|{sec_hash}"
+            qrcode_enc = base64.b64encode(qr_raw.encode('utf-8')).decode('utf-8')
+
+            reg = Registration(
+                user_id=user_id, 
+                event_id=event_id, 
+                ticket_code=ticket,
+                ticket_uuid=ticket_uuid,
+                security_hash=sec_hash,
+                qrcode_encrypted=qrcode_enc
+            )
             event.available_slots -= 1
             db.session.add(reg)
             db.session.commit()

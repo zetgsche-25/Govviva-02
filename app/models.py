@@ -102,6 +102,11 @@ class Registration(db.Model):
     status = db.Column(db.String(20), default='CONFIRMED', index=True) # CONFIRMED, CANCELLED
     ticket_code = db.Column(db.String(100), unique=True, nullable=True) # Unique encrypted check-in ticket security hash
     
+    # New Columns for Smart QR Code Presence Module
+    ticket_uuid = db.Column(db.String(100), nullable=True)
+    qrcode_encrypted = db.Column(db.Text, nullable=True)
+    security_hash = db.Column(db.String(256), nullable=True)
+
     __table_args__ = (db.UniqueConstraint('user_id', 'event_id', name='_user_event_uc'),)
 
     def to_dict(self):
@@ -111,7 +116,10 @@ class Registration(db.Model):
             "event_id": self.event_id,
             "registered_at": self.registered_at.isoformat() if self.registered_at else None,
             "status": self.status,
-            "ticket_code": self.ticket_code
+            "ticket_code": self.ticket_code,
+            "ticket_uuid": self.ticket_uuid,
+            "qrcode_encrypted": self.qrcode_encrypted,
+            "security_hash": self.security_hash
         }
 
 class PresenceCheck(db.Model):
@@ -125,6 +133,16 @@ class PresenceCheck(db.Model):
     calculated_percentage = db.Column(db.Float, default=0.0) # % of presence
     status = db.Column(db.String(20), default='PENDING', index=True) # PENDING, APPROVED, INCOMPLETE, ABSENT
 
+    # New Columns for detailed check-in / check-out audits
+    check_in_ip = db.Column(db.String(45), nullable=True)
+    check_in_device = db.Column(db.String(255), nullable=True)
+    check_out_ip = db.Column(db.String(45), nullable=True)
+    check_out_device = db.Column(db.String(255), nullable=True)
+    check_in_organizer_id = db.Column(db.Integer, nullable=True)
+    check_out_organizer_id = db.Column(db.Integer, nullable=True)
+    check_in_hash = db.Column(db.String(256), nullable=True)
+    check_out_hash = db.Column(db.String(256), nullable=True)
+
     def to_dict(self):
         return {
             "id": self.id,
@@ -134,7 +152,15 @@ class PresenceCheck(db.Model):
             "location": self.location,
             "calculated_duration": self.calculated_duration,
             "calculated_percentage": self.calculated_percentage,
-            "status": self.status
+            "status": self.status,
+            "check_in_ip": self.check_in_ip,
+            "check_in_device": self.check_in_device,
+            "check_out_ip": self.check_out_ip,
+            "check_out_device": self.check_out_device,
+            "check_in_organizer_id": self.check_in_organizer_id,
+            "check_out_organizer_id": self.check_out_organizer_id,
+            "check_in_hash": self.check_in_hash,
+            "check_out_hash": self.check_out_hash
         }
 
 class Certificate(db.Model):

@@ -139,11 +139,12 @@ def get_my_certificates():
             continue
 
         presence = PresenceCheck.query.filter_by(registration_id=r.id).first()
-        is_approved = presence and presence.status == 'APPROVED'
+        is_event_concluded = event.status in ['CONCLUDED', 'CONCLUIDO']
+        is_approved = presence and (presence.status == 'APPROVED' or (presence.calculated_percentage is not None and presence.calculated_percentage >= 75.0))
 
         cert = Certificate.query.filter_by(registration_id=r.id).first()
         
-        if is_approved and not cert:
+        if is_event_concluded and is_approved and not cert:
             try:
                 code_token = str(uuid.uuid4())[:8].upper()
                 code = f"GOV-CERT-{code_token}"
@@ -825,13 +826,13 @@ def reactivate_certificate():
         "certificate": cert.to_dict()
     })
 
-# POST /api/certificates/manual-emit - Admin manually issues certificate
+# POST /api/certificates/manual-emit - Admin or Organizer manually issues certificate
 @certificates_bp.route('/manual-emit', methods=['POST'])
 @jwt_required()
 def manual_emit_certificate():
     user_id = get_jwt_identity()
     admin_user = User.query.get(user_id)
-    if not admin_user or admin_user.role != 'ADMIN':
+    if not admin_user or admin_user.role not in ['ADMIN', 'ORGANIZER']:
         return jsonify({"error": "Acesso administrativo negado"}), 403
 
     data = request.get_json() or {}
@@ -843,10 +844,24 @@ def manual_emit_certificate():
     if not reg:
         return jsonify({"error": "Inscrição não encontrada"}), 404
 
-    # Verificar presença aprovada
+    event = Event.query.get(reg.event_id)
+    if not event:
+        return jsonify({"error": "Evento não encontrado"}), 404
+
+    # Se for organizador, verificar responsabilidade
+    if admin_user.role == 'ORGANIZER':
+        if event.creator_id != admin_user.id and event.org_id != admin_user.org_id:
+            return jsonify({"error": "Acesso negado: Este evento não está sob sua coordenação"}), 403
+
+    # REGRA 10: Evento concluído/encerrado
+    if event.status not in ['CONCLUDED', 'CONCLUIDO']:
+        return jsonify({"error": "Certificado indisponível. O evento ainda não foi encerrado."}), 400
+
+    # REGRA 10: Carga horária mínima (calculado_percentage >= 75 ou status APPROVED)
     presence = PresenceCheck.query.filter_by(registration_id=reg.id).first()
-    if not presence or presence.status != 'APPROVED':
-        return jsonify({"error": "Este cidadão ainda não cumpre 100% de frequência mínima para homologar certificado."}), 400
+    has_min_presence = presence and (presence.status == 'APPROVED' or (presence.calculated_percentage is not None and presence.calculated_percentage >= 75.0))
+    if not has_min_presence:
+        return jsonify({"error": "Certificado indisponível. Presença insuficiente."}), 400
 
     existing = Certificate.query.filter_by(registration_id=reg.id).first()
     if existing:

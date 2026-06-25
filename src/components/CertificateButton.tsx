@@ -1,71 +1,120 @@
 import React from 'react';
 import { jsPDF } from 'jspdf';
-import { Award, Download } from 'lucide-react';
-import { Event, User } from '../types';
+import { Download, Lock, AlertTriangle } from 'lucide-react';
+import { Registration, User } from '../types';
 
 interface CertificateButtonProps {
-  event: Event;
+  registration: Registration;
   user: User;
 }
 
-export const CertificateButton: React.FC<CertificateButtonProps> = ({ event, user }) => {
+export const CertificateButton: React.FC<CertificateButtonProps> = ({ registration, user }) => {
+  const { event, certificate, presence } = registration;
+
+  const isEventConcluded = event.status === 'CONCLUDED' || event.status === 'CONCLUIDO';
+  const hasMinPresence = presence && (presence.status === 'APPROVED' || (presence.calculated_percentage !== undefined && presence.calculated_percentage >= 75.0));
+
   const generatePDF = () => {
+    if (!certificate) return;
+
     const doc = new jsPDF({
       orientation: 'landscape',
       unit: 'mm',
       format: 'a4'
     });
 
-    // Fundo decorativo simples
+    // Decorative frame
     doc.setFillColor(245, 247, 250);
     doc.rect(0, 0, 297, 210, 'F');
     
-    doc.setDrawColor(37, 99, 235);
+    doc.setDrawColor(0, 75, 130); // GOV BLUE
     doc.setLineWidth(2);
     doc.rect(10, 10, 277, 190, 'S');
 
-    // Título
+    // Title
     doc.setFont("helvetica", "bold");
     doc.setFontSize(40);
     doc.setTextColor(30, 41, 59);
-    doc.text("CERTIFICADO", 148, 60, { align: "center" });
+    doc.text("CERTIFICADO DIGITAL", 148, 55, { align: "center" });
 
-    doc.setFontSize(18);
-    doc.setFont("helvetica", "normal");
-    doc.text("DE PARTICIPAÇÃO EM EVENTO OFICIAL", 148, 75, { align: "center" });
-
-    // Conteúdo
     doc.setFontSize(14);
-    doc.text("Certificamos que para os devidos fins de comprovação,", 148, 105, { align: "center" });
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(100, 116, 139);
+    doc.text("OUTORGADO PELO PORTAL MUNICIPAL GOVVIVA DE MARICÁ/RJ", 148, 68, { align: "center" });
+
+    // Body
+    doc.setFontSize(14);
+    doc.setTextColor(30, 41, 59);
+    doc.text("Certificamos para os devidos fins que o cidadão registrado:", 148, 95, { align: "center" });
     
-    doc.setFontSize(24);
+    doc.setFontSize(26);
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(37, 99, 235);
-    doc.text(user.name.toUpperCase(), 148, 120, { align: "center" });
+    doc.setTextColor(0, 75, 130);
+    doc.text(user.name.toUpperCase(), 148, 112, { align: "center" });
+
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(100, 116, 139);
+    doc.text(`PORTADOR DO CPF: ${user.cpf || 'Não informado'}`, 148, 122, { align: "center" });
 
     doc.setFontSize(14);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(30, 41, 59);
-    doc.text(`Participou do evento: "${event.title}"`, 148, 135, { align: "center" });
-    doc.text(`Realizado por: ${event.org_name || 'Governo Municipal'}`, 148, 145, { align: "center" });
-    doc.text(`Local: ${event.location}`, 148, 155, { align: "center" });
+    doc.text(`cumpriu com aproveitamento as atividades presenciais de:`, 148, 138, { align: "center" });
+    doc.setFont("helvetica", "bold");
+    doc.text(`"${event.title.toUpperCase()}"`, 148, 146, { align: "center" });
 
-    // Rodapé
-    doc.setFontSize(10);
-    const date = new Date().toLocaleDateString('pt-BR');
-    doc.text(`Protocolo de Autenticação: #2026-${event.id.toString().padStart(4, '0')}`, 148, 175, { align: "center" });
-    doc.text(`Gerado via Portal GOVVIVA em ${date}`, 148, 185, { align: "center" });
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(12);
+    doc.text(`Órgão Responsável: ${event.org_responsible || 'Secretaria Executiva'} | Carga Horária: ${event.workload || 4} Horas`, 148, 156, { align: "center" });
+
+    // Footer
+    doc.setFontSize(9);
+    doc.setTextColor(148, 163, 184);
+    doc.setFont("helvetica", "bold");
+    doc.text(`CÓDIGO DE AUTENTICAÇÃO: ${certificate.code}`, 148, 178, { align: "center" });
+    doc.setFont("helvetica", "normal");
+    doc.text(`ASSINATURA DIGITAL (SHA-256): ${certificate.hash_verification}`, 148, 184, { align: "center" });
     
-    doc.save(`certificado_viva_${event.id}.pdf`);
+    const dateStr = new Date(certificate.issued_at).toLocaleDateString('pt-BR');
+    doc.text(`Emitido oficialmente em ${dateStr} - Válido sob os termos da legislação municipal de Maricá.`, 148, 192, { align: "center" });
+    
+    doc.save(`certificado_govviva_${certificate.code}.pdf`);
   };
+
+  if (certificate) {
+    return (
+      <button
+        onClick={generatePDF}
+        className="flex items-center justify-center gap-2 w-full py-3 bg-emerald-600 text-white hover:bg-emerald-700 rounded-xl font-bold transition-all active:scale-[0.98] uppercase tracking-widest text-[10px] shadow-md shadow-emerald-100"
+      >
+        <Download className="w-4 h-4" />
+        Baixar Certificado Oficial
+      </button>
+    );
+  }
+
+  if (!isEventConcluded) {
+    return (
+      <button
+        disabled
+        className="flex items-center justify-center gap-2 w-full py-3 bg-gray-150 text-gray-400 rounded-xl font-bold cursor-not-allowed uppercase tracking-widest text-[10px] border border-gray-200"
+        title="O certificado só estará disponível após o encerramento do evento."
+      >
+        <Lock className="w-3.5 h-3.5" />
+        Certificado Indisponível (Em andamento)
+      </button>
+    );
+  }
 
   return (
     <button
-      onClick={generatePDF}
-      className="flex items-center justify-center gap-2 w-full py-3 bg-white text-emerald-700 rounded-xl border-2 border-emerald-100 font-bold hover:bg-emerald-50 hover:border-emerald-200 transition-all active:scale-[0.98] uppercase tracking-widest text-[10px]"
+      disabled
+      className="flex items-center justify-center gap-2 w-full py-3 bg-amber-50/50 text-amber-600 border border-amber-250 rounded-xl font-bold cursor-not-allowed uppercase tracking-widest text-[10px]"
+      title="Você não atingiu a carga horária mínima de presença (75%) exigida para emissão."
     >
-      <Download className="w-4 h-4" />
-      Emitir Certificado Oficial
+      <AlertTriangle className="w-3.5 h-3.5" />
+      Certificado indisponível. Presença insuficiente.
     </button>
   );
 };
