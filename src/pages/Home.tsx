@@ -26,9 +26,9 @@ export const Home: React.FC = () => {
     fetchData();
   }, [user]);
 
-  const fetchData = async () => {
+  const fetchData = async (silent = false) => {
     try {
-      setLoading(true);
+      if (!silent) setLoading(true);
       const eventsData = await api.get('/events');
       setEvents(eventsData);
 
@@ -39,7 +39,7 @@ export const Home: React.FC = () => {
     } catch (err: any) {
       setError('Falha ao carregar catálogo de eventos institucional.');
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
@@ -53,8 +53,8 @@ export const Home: React.FC = () => {
       setActionLoading(true);
       await api.post('/registrations', { event_id: eventId });
       setMessage({ type: 'success', text: 'Inscrição realizada com sucesso! Vaga garantida.' });
-      fetchData(); // Atualiza contador de vagas
-      setSelectedEvent(null);
+      await fetchData(true); // Quietly refresh events and registrations list
+      // Do NOT close the modal immediately so that the user can visualize their ticket QR code right away!
     } catch (err: any) {
       setMessage({ type: 'error', text: err.message || 'Erro ao processar inscrição.' });
     } finally {
