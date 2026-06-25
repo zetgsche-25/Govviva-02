@@ -9,6 +9,7 @@ import { CertificateButton } from '../components/CertificateButton';
 import { EmptyState } from '../components/EmptyState';
 import { Event, Registration } from '../types';
 import { Info, CheckCircle, Loader2, AlertCircle, X, MapPin, Calendar, Users, ExternalLink, ArrowRight, SearchX, Shield } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 
 export const Home: React.FC = () => {
   const { user } = useAuth();
@@ -374,14 +375,40 @@ export const Home: React.FC = () => {
                 <div className="flex flex-col sm:flex-row items-center gap-6">
                   {isUserRegistered(selectedEvent.id) ? (
                     <div className="w-full flex flex-col gap-4">
-                      <div className="w-full bg-emerald-50 text-emerald-800 p-6 rounded-2xl flex items-center justify-center gap-4 border border-emerald-100 shadow-inner">
-                        <CheckCircle className="w-6 h-6 text-emerald-500" />
-                        <div>
-                          <p className="text-[10px] font-black uppercase tracking-widest mb-0.5">Status: Confirmado</p>
-                          <p className="font-bold">Sua participação está garantida nesta atividade.</p>
+                      <div className="w-full bg-emerald-50 text-emerald-800 p-6 rounded-3xl flex flex-col items-center gap-4 border border-emerald-100 shadow-inner text-center">
+                        <div className="flex items-center gap-3">
+                          <CheckCircle className="w-6 h-6 text-emerald-500" />
+                          <div>
+                            <p className="text-[10px] font-black uppercase tracking-widest mb-0.5">Status: Confirmado</p>
+                            <p className="font-bold">Sua participação está garantida nesta atividade.</p>
+                          </div>
                         </div>
+
+                        {/* QR Code de Presença Exibido Imediatamente */}
+                        {(() => {
+                          const reg = myRegistrations.find(r => r.event.id === selectedEvent.id);
+                          if (!reg) return null;
+                          return (
+                            <div className="flex flex-col items-center mt-2 p-4 bg-white rounded-2xl border border-emerald-150 shadow-md">
+                              <QRCodeSVG 
+                                value={reg.qrcode_encrypted || reg.ticket_code || ''} 
+                                size={140}
+                                level="H"
+                              />
+                              <p className="text-[9px] font-mono font-bold text-gray-400 mt-2 select-all uppercase tracking-wider">
+                                TICKET: {reg.ticket_code}
+                              </p>
+                              <p className="text-[10px] text-gray-500 max-w-[200px] mt-1 font-medium leading-relaxed">
+                                Apresente este QR Code no local para registrar sua entrada e saída.
+                              </p>
+                            </div>
+                          );
+                        })()}
                       </div>
-                      {user && <CertificateButton event={selectedEvent} user={user} />}
+                      {(() => {
+                        const reg = myRegistrations.find(r => r.event.id === selectedEvent.id);
+                        return reg && <CertificateButton registration={reg} user={user} />;
+                      })()}
                       <button 
                         onClick={() => setSelectedEvent(null)}
                         className="w-full px-10 py-5 bg-gray-50 text-gray-500 hover:text-gray-700 rounded-2xl font-black uppercase tracking-widest text-[11px] transition-all hover:bg-gray-100"

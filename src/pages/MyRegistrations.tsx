@@ -6,6 +6,7 @@ import { EmptyState } from '../components/EmptyState';
 import { Registration, Event } from '../types';
 import { Loader2, AlertCircle, CalendarX, ArrowLeft, X, Info, CheckCircle, SearchX } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { QRCodeSVG } from 'qrcode.react';
 
 export const MyRegistrations: React.FC = () => {
   const { user } = useAuth();
@@ -166,12 +167,12 @@ export const MyRegistrations: React.FC = () => {
                 <div className="flex flex-col items-center text-center">
                   {selectedReg.ticket_code ? (
                     <>
-                      <div className="bg-white p-4 rounded-3xl shadow-md border border-gray-100 mb-3">
-                        <img 
-                          src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${selectedReg.ticket_code}`} 
-                          alt="QR Code Ticket" 
-                          referrerPolicy="no-referrer"
-                          className="w-40 h-40 object-contain"
+                      <div className="bg-white p-4 rounded-3xl shadow-md border border-gray-100 mb-3 flex items-center justify-center">
+                        <QRCodeSVG 
+                          value={selectedReg.qrcode_encrypted || selectedReg.ticket_code} 
+                          size={160}
+                          level="H"
+                          includeMargin={false}
                         />
                       </div>
                       <p className="text-[10px] font-mono font-bold text-gray-400 select-all uppercase tracking-wider">
