@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { api } from '../services/api';
 import { useAuth } from '../hooks/useAuth';
+import { MaricaLogo } from '../components/MaricaLogo';
 import { 
   FileCheck, 
   Search, 
@@ -164,6 +165,9 @@ export const Certificates: React.FC = () => {
               <p className="text-gray-400 font-medium mt-4 max-w-xl">
                 Emissão instantânea, homologação municipal com QR Code certificado e histórico completo de participação.
               </p>
+            </div>
+            <div className="shrink-0 opacity-85 hover:opacity-100 transition-opacity self-start md:self-center bg-gray-50 border border-gray-100 px-6 py-5 rounded-3xl shadow-sm">
+              <MaricaLogo variant="black" height={36} />
             </div>
           </div>
 
@@ -508,13 +512,13 @@ export const Certificates: React.FC = () => {
               <div className="absolute bottom-4 right-4 w-12 h-12 border-b-4 border-r-4 border-gov-blue print:bottom-2 print:right-2" />
 
               {/* Cabeçalho Institucional do Munícipio */}
-              <div className="text-center mb-10 md:mb-14">
-                {/* Brasão Simbólico Municipal */}
-                <div className="w-16 h-16 bg-gov-blue text-white rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-white shadow-xl ring-2 ring-gov-blue print:shadow-none">
-                  <Award className="w-8 h-8" />
+              <div className="text-center mb-10 md:mb-14 flex flex-col items-center justify-center">
+                {/* Brasão Oficial Municipal em Vetor */}
+                <div className="mb-4 opacity-95">
+                  <MaricaLogo variant="black" height={45} />
                 </div>
                 <h4 className="text-xs font-black text-gov-blue uppercase tracking-[0.3em] leading-none mb-1">MUNICÍPIO DE MARICÁ</h4>
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{selectedCertForPrint.event?.org_responsible || 'PORTAL GOVVIVA DE ATIVIDADES'}</p>
+                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{selectedCertForPrint.event?.org_responsible || 'SECRETARIA DE CIÊNCIA E TECNOLOGIA'}</p>
                 <div className="w-32 h-0.5 bg-gov-blue/20 mx-auto mt-4" />
               </div>
 

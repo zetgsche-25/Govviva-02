@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { MaricaLogo } from '../components/MaricaLogo';
 import { 
   Smartphone, 
   Settings, 
@@ -114,11 +115,14 @@ export const MobileDocs: React.FC = () => {
               Arquitetura em React Native, documentação de integração com GOV.BR, especificação completa de APIs, roteadores offline-first e um simulador móvel interativo para validação em tempo real.
             </p>
           </div>
-          <div className="flex items-center gap-3 shrink-0 relative z-10">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 shrink-0 relative z-10">
             <span className="hidden sm:inline-flex items-center gap-1.5 text-xs text-blue-200 font-bold">
               <Smartphone className="w-5 h-5 text-emerald-300" />
               Android & iOS • Expo SDK 51
             </span>
+            <div className="bg-white/5 border border-white/10 px-4 py-2.5 rounded-2xl flex items-center justify-center backdrop-blur-sm opacity-90 hover:opacity-100 transition-opacity">
+              <MaricaLogo variant="white" height={26} />
+            </div>
           </div>
         </div>
       </div>

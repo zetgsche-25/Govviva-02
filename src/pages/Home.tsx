@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import { useAuth } from '../hooks/useAuth';
 import { EventCard } from '../components/EventCard';
+import { MaricaLogo } from '../components/MaricaLogo';
 import { SkeletonCard } from '../components/SkeletonCard';
 import { motion } from 'motion/react';
 import { CertificateButton } from '../components/CertificateButton';
@@ -77,10 +78,15 @@ export const Home: React.FC = () => {
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          {/* Official logo float in the hero (canto superior/meio direito) */}
+          <div className="absolute right-8 top-1/2 -translate-y-1/2 hidden lg:flex flex-col items-center justify-center bg-white/5 backdrop-blur-md border border-white/10 px-10 py-12 rounded-[36px] shadow-2xl">
+            <MaricaLogo variant="white" height={75} />
+          </div>
+
           <div className="max-w-3xl animate-fade-in shadow-2xl shadow-black/20 p-8 rounded-3xl bg-black/10 backdrop-blur-sm border border-white/10">
             <div className="flex items-center gap-3 mb-8">
               <div className="w-16 h-1.5 bg-white/40 rounded-full"></div>
-              <span className="text-xs font-black uppercase tracking-[0.4em] text-white/90">Secretaria Municipal de Cultura - Maricá/RJ</span>
+              <span className="text-xs font-black uppercase tracking-[0.4em] text-white/90">Secretaria de Ciência e Tecnologia - Maricá/RJ</span>
             </div>
             <h1 className="text-5xl sm:text-8xl font-black tracking-tighter mb-8 uppercase leading-[0.85]">
               Agenda <br/>
@@ -297,6 +303,9 @@ export const Home: React.FC = () => {
             <div className="md:w-1/3 bg-gov-blue text-white p-12 flex flex-col justify-between relative overflow-hidden">
               <div className="absolute -top-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
               <div className="relative z-10">
+                <div className="mb-8 opacity-90 hover:opacity-100 transition-opacity border-b border-white/15 pb-6">
+                  <MaricaLogo variant="white" height={32} />
+                </div>
                 <span className="inline-block px-4 py-2 bg-white/10 text-white text-[10px] font-black rounded-lg uppercase tracking-widest border border-white/20 mb-8">
                   {selectedEvent.category}
                 </span>
@@ -390,6 +399,9 @@ export const Home: React.FC = () => {
                           if (!reg) return null;
                           return (
                             <div className="flex flex-col items-center mt-2 p-4 bg-white rounded-2xl border border-emerald-150 shadow-md">
+                              <div className="mb-4 border-b border-gray-100 pb-2 w-full flex justify-center opacity-85 hover:opacity-100 transition-opacity">
+                                <MaricaLogo variant="black" height={20} />
+                              </div>
                               <QRCodeSVG 
                                 value={reg.qrcode_encrypted || reg.ticket_code || ''} 
                                 size={140}

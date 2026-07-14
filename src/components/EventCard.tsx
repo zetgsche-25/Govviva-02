@@ -76,9 +76,14 @@ export const EventCard: React.FC<EventCardProps> = ({ event, onClick, isRegister
         </div>
 
         <div className="pt-6 border-t border-gray-100 flex items-center justify-between">
-          <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.25em] group-hover:text-gov-blue transition-colors">
-            Consultar Protocolo
-          </span>
+          <div className="flex flex-col">
+            <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.25em] group-hover:text-gov-blue transition-colors">
+              Consultar Protocolo
+            </span>
+            <span className="text-[8px] font-extrabold text-gov-blue uppercase tracking-[0.15em] mt-0.5 opacity-80 group-hover:opacity-100 transition-opacity">
+              Secretaria de Ciência e Tecnologia
+            </span>
+          </div>
           <div className="w-11 h-11 rounded-2xl bg-gray-50 flex items-center justify-center group-hover:bg-gov-blue transition-all group-hover:scale-105 shadow-sm border border-gray-100 group-hover:border-gov-blue">
             <ChevronRight className="w-6 h-6 text-gray-300 group-hover:text-white transition-all" />
           </div>

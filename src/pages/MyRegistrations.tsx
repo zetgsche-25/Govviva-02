@@ -7,6 +7,7 @@ import { Registration, Event } from '../types';
 import { Loader2, AlertCircle, CalendarX, ArrowLeft, X, Info, CheckCircle, SearchX } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
+import { MaricaLogo } from '../components/MaricaLogo';
 
 export const MyRegistrations: React.FC = () => {
   const { user } = useAuth();
@@ -58,13 +59,18 @@ export const MyRegistrations: React.FC = () => {
             Consulte seu histórico de participações, valide protocolos ativos e realize o download de certificados autenticados pela Secretaria Municipal.
           </p>
         </div>
-        <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-xl flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-gov-blue-light flex items-center justify-center">
-            <CheckCircle className="w-6 h-6 text-gov-blue" />
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+          <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-xl flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-gov-blue-light flex items-center justify-center">
+              <CheckCircle className="w-6 h-6 text-gov-blue" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest">Protocolos Ativos</p>
+              <p className="text-2xl font-black text-gray-900">{registrations.length}</p>
+            </div>
           </div>
-          <div>
-            <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest">Protocolos Ativos</p>
-            <p className="text-2xl font-black text-gray-900">{registrations.length}</p>
+          <div className="bg-white px-6 py-5 rounded-3xl border border-gray-100 shadow-xl flex items-center justify-center opacity-85 hover:opacity-100 transition-opacity shrink-0">
+            <MaricaLogo variant="black" height={36} />
           </div>
         </div>
       </div>

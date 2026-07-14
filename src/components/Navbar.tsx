@@ -4,6 +4,7 @@ import { LogOut, User as UserIcon, Calendar, Menu, X, ChevronRight, Globe, Shiel
 import { useAuth } from '../hooks/useAuth';
 import { motion, AnimatePresence } from 'motion/react';
 import { NotificationBell } from './NotificationBell';
+import { MaricaLogo } from './MaricaLogo';
 
 export const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
@@ -42,19 +43,27 @@ export const Navbar: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-24 items-center">
             {/* Logo Section */}
-            <Link to="/" className="flex items-center gap-4 group">
-              <div className="bg-gov-blue p-3 rounded-2xl shadow-xl shadow-blue-100 group-hover:scale-105 transition-all group-hover:shadow-blue-200">
-                <Calendar className="w-8 h-8 text-white" />
+            <div className="flex items-center gap-5">
+              <Link to="/" className="flex items-center gap-4 group">
+                <div className="bg-gov-blue p-3 rounded-2xl shadow-xl shadow-blue-100 group-hover:scale-105 transition-all group-hover:shadow-blue-200">
+                  <Calendar className="w-8 h-8 text-white" />
+                </div>
+                <div className="flex flex-col leading-none">
+                  <span className="text-2xl font-black tracking-tighter text-gov-blue uppercase italic">
+                    GOV<span className="text-gray-900 not-italic">VIVA</span>
+                  </span>
+                  <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1.5 opacity-80">
+                    Secretaria de Ciência e Tecnologia
+                  </span>
+                </div>
+              </Link>
+              
+              <div className="hidden md:block h-8 w-px bg-gray-200" />
+              
+              <div className="hidden md:block">
+                <MaricaLogo variant="black" height={36} />
               </div>
-              <div className="flex flex-col leading-none">
-                <span className="text-2xl font-black tracking-tighter text-gov-blue uppercase italic">
-                  GOV<span className="text-gray-900 not-italic">VIVA</span>
-                </span>
-                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1.5 opacity-80">
-                  Secretaria de Ciência e Tecnologia
-                </span>
-              </div>
-            </Link>
+            </div>
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-12">

@@ -31,12 +31,12 @@ interface MultiSecretariasDashboardProps {
 const COLORS = ['#004B82', '#0284C7', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
 
 export const MultiSecretariasDashboard: React.FC<MultiSecretariasDashboardProps> = ({ eventsDetails }) => {
-  const [selectedSecretariatTab, setSelectedSecretariatTab] = useState<string>('Secretaria Municipal de Cultura');
+  const [selectedSecretariatTab, setSelectedSecretariatTab] = useState<string>('Secretaria de Ciência e Tecnologia');
 
   // Agrupado de dados de cada secretaria de forma consolidada e computada em tempo real
   const secretariatMetrics = useMemo(() => {
     const defaultSecs = [
-      'Secretaria Municipal de Cultura',
+      'Secretaria de Ciência e Tecnologia',
       'Secretaria Municipal de Educação',
       'Secretaria Municipal de Saúde',
       'Secretaria Municipal de Governo',

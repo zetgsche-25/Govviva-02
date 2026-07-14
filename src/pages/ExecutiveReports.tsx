@@ -104,12 +104,12 @@ export const ExecutiveReports: React.FC = () => {
 
   // Módulo Multi-Secretarias
   const [reportsTab, setReportsTab] = useState<'kpi_geral' | 'multi_secretarias'>('kpi_geral');
-  const [selectedSecretariatTab, setSelectedSecretariatTab] = useState<string>('Secretaria Municipal de Cultura');
+  const [selectedSecretariatTab, setSelectedSecretariatTab] = useState<string>('Secretaria de Ciência e Tecnologia');
 
   // Agrupado de dados de cada secretaria de forma consolidada e computada em tempo real
   const secretariatMetrics = useMemo(() => {
     const defaultSecs = [
-      'Secretaria Municipal de Cultura',
+      'Secretaria de Ciência e Tecnologia',
       'Secretaria Municipal de Educação',
       'Secretaria Municipal de Saúde',
       'Secretaria Municipal de Governo',
