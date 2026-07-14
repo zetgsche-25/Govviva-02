@@ -258,7 +258,7 @@ export const LgpdDashboard: React.FC = () => {
 
           <div className="pt-4 border-t border-gray-50 text-center">
             <p className="text-[10px] text-gray-400 font-bold leading-normal">
-              Seu perfil de dados está hospedado de forma segura no Sistema Municipal.
+              Seu perfil de dados está hospedado de forma segura na Secretaria de Ciência e Tecnologia.
             </p>
           </div>
         </div>
@@ -427,7 +427,7 @@ export const LgpdDashboard: React.FC = () => {
                     <div className="p-6 bg-gray-50 rounded-2xl border border-gray-100 font-mono text-[11px] text-gray-600 h-64 overflow-y-scroll leading-relaxed space-y-4">
                       <p className="font-bold text-gray-700">1. ESCOPO DO SERVIÇO</p>
                       <p>
-                        O aplicativo e portal GOVVIVA é uma plataforma pública desenvolvida pela Secretaria Municipal para fomento cívico, credenciamento em conferências oficiais, geração e validação de certificados municipais com assinaturas criptográficas nativas.
+                        O aplicativo e portal GOVVIVA é uma plataforma pública desenvolvida pela Secretaria de Ciência e Tecnologia para fomento cívico, credenciamento em conferências oficiais, geração e validação de certificados municipais com assinaturas criptográficas nativas.
                       </p>
                       <p className="font-bold text-gray-700">2. CADASTRO DE CIDADÃO E SEGURANÇA</p>
                       <p>

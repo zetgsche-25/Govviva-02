@@ -4,6 +4,8 @@ from datetime import datetime
 class UserService:
     @staticmethod
     def create_user(name, email, password, role='CITIZEN', org_id=None, cpf=None, lgpd_terms_accepted=False, lgpd_privacy_accepted=False, lgpd_marketing_consented=False, lgpd_treatment_consented=False, bairro=None):
+        if email:
+            email = email.strip().lower()
         if User.query.filter_by(email=email).first():
             return None, "E-mail já cadastrado."
         

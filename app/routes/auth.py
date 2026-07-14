@@ -8,10 +8,13 @@ auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
-    data = request.get_json()
+    data = request.get_json() or {}
+    email = data.get('email')
+    if email:
+        email = email.strip().lower()
     user, error = UserService.create_user(
         data.get('name'), 
-        data.get('email'), 
+        email, 
         data.get('password'),
         data.get('role', 'CITIZEN'),
         data.get('org_id'),
@@ -42,10 +45,23 @@ def register():
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
-    data = request.get_json()
-    user = User.query.filter_by(email=data.get('email')).first()
+    data = request.get_json() or {}
+    email = data.get('email')
+    if email:
+        email = email.strip().lower()
+    password = data.get('password')
+    print(f"[DEBUG LOGIN] Attempting login for email: '{email}'")
     
-    if not user or not user.check_password(data.get('password')):
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        print(f"[DEBUG LOGIN] User not found for email: '{email}'")
+        return jsonify({"error": "Credenciais inválidas"}), 401
+        
+    pwd_check = user.check_password(password)
+    print(f"[DEBUG LOGIN] User found! ID: {user.id}, Role: {user.role}, Stored Hash: '{user.password_hash}', Check result: {pwd_check}")
+    
+    if not pwd_check:
+        print(f"[DEBUG LOGIN] Password check failed for email: '{email}'")
         return jsonify({"error": "Credenciais inválidas"}), 401
     
     token = create_access_token(identity=str(user.id))
@@ -280,6 +296,8 @@ def forgot_password():
 
     data = request.get_json() or {}
     email = data.get('email')
+    if email:
+        email = email.strip().lower()
 
     if not email:
         return jsonify({"error": "O campo de e-mail é obrigatório."}), 400
@@ -341,6 +359,8 @@ def reset_password():
 
     data = request.get_json() or {}
     email = data.get('email')
+    if email:
+        email = email.strip().lower()
     token = data.get('token')
     new_password = data.get('password')
 

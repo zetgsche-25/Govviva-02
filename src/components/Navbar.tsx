@@ -51,7 +51,7 @@ export const Navbar: React.FC = () => {
                   GOV<span className="text-gray-900 not-italic">VIVA</span>
                 </span>
                 <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1.5 opacity-80">
-                  Sistema Municipal de Eventos
+                  Secretaria de Ciência e Tecnologia
                 </span>
               </div>
             </Link>
